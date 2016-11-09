@@ -32,6 +32,7 @@ $(document).ready(function() {
 
 Choose from one of the following methods:
 
+- `git clone git@github.com:thdoan/pretty-dropdowns.git`
 - `git clone https://github.com/thdoan/pretty-dropdowns.git`
 - `bower install pretty-dropdowns`
 - `npm install pretty-dropdowns`
