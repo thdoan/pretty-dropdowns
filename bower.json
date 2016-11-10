@@ -1,7 +1,7 @@
 {
   "name": "pretty-dropdowns",
   "description": "A simple, lightweight jQuery plugin to create stylized drop-down menus.",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "main": [
     "dist/css/prettydropdowns.css",
     "dist/js/jquery.prettydropdowns.js"
