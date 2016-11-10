@@ -14,7 +14,7 @@
   border: 1px solid #a9a9a9;
   color: #000;
   cursor: pointer;
-  font: normal 18px/1 Calibri, sans-serif;
+  font: normal 18px Calibri, sans-serif;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -47,9 +47,11 @@
 .prettydropdown > ul > li {
   position: relative;
   min-width: 70px;
+  height: 48px; /* 50px - borders */
   box-sizing: border-box;
   display: none;
   line-height: 48px; /* 50px - borders */
+  margin: 0;
   padding-left: 0.8rem;
 }
 .prettydropdown.loading > ul > li {
