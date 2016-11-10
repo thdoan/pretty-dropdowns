@@ -14,11 +14,13 @@
       // NOTE: $this.css('margin') returns empty string in Firefox.
       // See https://github.com/jquery/jquery/issues/3383
       var nWidth = $this.outerWidth(),
+        nMarginL = $this.css('margin-left'),
+        nMarginR = $this.css('margin-right'),
         sHtml = '<ul' + ($this.attr('title')?' title="'+$this.attr('title')+'"':'') + ' style="margin:'
           + $this.css('margin-top') + ' '
-          + $this.css('margin-right') + ' '
+          + nMarginR + ' '
           + $this.css('margin-bottom') + ' '
-          + $this.css('margin-left') + ';">',
+          + nMarginL + ';">',
         resetDropdown = function(o) {
           var $dropdown = $(o.currentTarget||o);
           if ($dropdown.hasClass('reverse')) $dropdown.prepend($('li:last-child', $dropdown));
@@ -72,7 +74,7 @@
         }
       });
       $dropdown.on('mouseleave', resetDropdown);
-      $dropdown.parent().width($('li', $dropdown).outerWidth()+2).removeClass('loading');
+      $dropdown.parent().width($('li', $dropdown).outerWidth()+parseFloat(nMarginL)+parseFloat(nMarginR)+2).removeClass('loading');
     });
   };
 }(jQuery));
