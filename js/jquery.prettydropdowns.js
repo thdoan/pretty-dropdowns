@@ -14,7 +14,7 @@
       // NOTE: $this.css('margin') returns empty string in Firefox.
       // See https://github.com/jquery/jquery/issues/3383
       var nWidth = $this.outerWidth(),
-        sHtml = '<ul title="' + $this.attr('title') + '" style="margin:'
+        sHtml = '<ul' + ($this.attr('title')?' title="'+$this.attr('title')+'"':'') + ' style="margin:'
           + $this.css('margin-top') + ' '
           + $this.css('margin-right') + ' '
           + $this.css('margin-bottom') + ' '
@@ -72,7 +72,7 @@
         }
       });
       $dropdown.on('mouseleave', resetDropdown);
-      $dropdown.parent().width(nWidth+1).removeClass('loading');
+      $dropdown.parent().width($('li', $dropdown).outerWidth()+2).removeClass('loading');
     });
   };
 }(jQuery));
