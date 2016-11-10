@@ -56,7 +56,7 @@
           $dropdown.prepend($li.addClass('chevron')).removeClass('reverse');
           // Sync <select> element
           $('option[value="' + $li.data('value') +'"]', $this).prop('selected', true);
-          //$this.trigger('change');
+          $this.trigger('change');
         }
         $dropdown.toggleClass('active');
         // Try to keep drop-down menu within viewport
