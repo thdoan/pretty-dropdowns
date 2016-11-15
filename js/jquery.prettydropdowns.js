@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v1.0.5 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v1.0.6 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -10,7 +10,7 @@
   $.fn.prettyDropdown = function() {
     return this.each(function() {
       var $this = $(this);
-      if ($this.data('loaded') || $this.hasClass('plain')) return true; // Continue
+      if ($this.data('loaded')) return true; // Continue
       // NOTE: $this.css('margin') returns empty string in Firefox.
       // See https://github.com/jquery/jquery/issues/3383
       var nWidth = $this.outerWidth(),
@@ -36,7 +36,7 @@
         nWidth = $dropdown.outerWidth(true),
         nOuterWidth;
       // Calculate width if initially hidden
-      if (!$dropdown.width()) {
+      if ($dropdown.width()<=0) {
         var $clone = $dropdown.parent().clone().css({
             position: 'absolute',
             top: '-100%'
