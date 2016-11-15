@@ -28,8 +28,6 @@ $(document).ready(function() {
 </script>
 ```
 
-If you don't want to convert a `<select>` element into a pretty drop-down menu, then give it a `plain` class.
-
 ## Installation
 
 Choose from one of the following methods:
