@@ -18,69 +18,31 @@ select {
   height: 50px;
   padding: 0 1rem;
 }
-
-/* Zebra Accordion plugin */
-#accordion {
-  width: 40%;
-  min-width: 304px;
-  margin: 2rem auto;
-}
-#accordion dd {
-  display: none;
-  margin: 0;
-  padding: 1rem;
-}
-#accordion dt {
-  background: #c40000;
-  border-bottom: 1px solid #fff;
-  color: #fff;
-  cursor: pointer;
-  font-weight: bold;
-  padding: 0.5rem;
-}
-#accordion dt:hover {
-  opacity: 0.8;
-}
 </style>
 </head>
 <body>
 
-<dl id="accordion" class="Zebra_Accordion">
-  <dt title="Toggle section">Section 1</dt>
-  <dd>
-    Lorem ipsum dolor sit amet consectetuer facilisis lacinia sapien ac et.
-    Quis hendrerit neque congue pretium iaculis justo laoreet orci elit condimentum.
-    Eros natoque Curabitur accumsan eget quis porttitor Sed Vestibulum amet sed.
-  </dd>
-  <dt title="Toggle section">Section 2</dt>
-  <dd style="text-align:center">
-    <select name="sort" title="Sort by">
-      <option value="position">Most Popular</option>
-      <option value="name">Name</option>
-      <option value="price_desc">Price (High to Low)</option>
-      <option value="price">Price (Low to High)</option>
-      <option value="date">Newest</option>
-    </select>
-    <br><br>
-    <select name="qty">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-    </select>
-  </dd>
-  <dt title="Toggle section">Section 3</dt>
-  <dd>
-    Lorem ipsum dolor sit amet consectetuer facilisis lacinia sapien ac et.
-    Quis hendrerit neque congue pretium iaculis justo laoreet orci elit condimentum.
-    Eros natoque Curabitur accumsan eget quis porttitor Sed Vestibulum amet sed.
-  </dd>
-</dl>
+<form>
+  <select name="sort" title="Sort by">
+    <option value="position">Most Popular</option>
+    <option value="name">Name</option>
+    <option value="price_desc">Price (High to Low)</option>
+    <option value="price">Price (Low to High)</option>
+    <option value="date">Newest</option>
+  </select>
+  <br><br>
+  <select name="qty">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+  </select>
+</form>
 
 <!--[if lt IE 9]>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -88,14 +50,9 @@ select {
 <!--[if IE 9]><!-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <!--<![endif]-->
-<script src="//cdn.rawgit.com/stefangabos/Zebra_Accordion/master/public/javascript/zebra_accordion.js"></script>
 <script src="js/jquery.prettydropdowns.js"></script>
 <script>
 $(document).ready(function() {
-  // Initiate accordion
-  new $.Zebra_Accordion($('#accordion'), {
-    'collapsible':  true
-  });
   // Initiate Pretty Dropdowns
   $('select').prettyDropdown();
   // Log option selection
