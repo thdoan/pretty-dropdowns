@@ -12,7 +12,13 @@
 body {
   font-family: sans-serif;
   font-size: 16px;
-  margin: 8px;
+  margin: 2em;
+  text-align: center;
+}
+label {
+  display: inline-block;
+  font-weight: bold;
+  margin: 0.5rem 0;
 }
 select {
   height: 50px;
@@ -23,6 +29,7 @@ select {
 <body>
 
 <form>
+  <label>With tooltip:</label><br>
   <select name="sort" title="Sort by">
     <option value="position">Most Popular</option>
     <option value="name">Name</option>
@@ -31,7 +38,8 @@ select {
     <option value="date">Newest</option>
   </select>
   <br><br>
-  <select name="qty">
+  <label>With event handler:</label><br>
+  <select name="qty" onchange="alert('You selected ' + value)">
     <option value="1">1</option>
     <option value="2">2</option>
     <option value="3">3</option>
@@ -55,10 +63,6 @@ select {
 $(document).ready(function() {
   // Initiate Pretty Dropdowns
   $('select').prettyDropdown();
-  // Log option selection
-  $('select').change(function() {
-    console.log('"' + this.value + '" selected');
-  });
 });
 </script>
 <script>
