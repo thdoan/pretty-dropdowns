@@ -15,8 +15,8 @@
       };
     // Default options
     oOptions = $.extend({
-      height: 50,
-      style: 'chevron'
+      arrowStyle: 'chevron',
+      height: 50
     }, oOptions);
     // Validate height; enforce minimum height
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
@@ -40,7 +40,7 @@
         sHtml += '<li data-value="' + this.value + '"' + sStyle + '>' + this.text + '</li>';
       });
       sHtml += '</ul>';
-      $this.css('visibility', 'hidden').wrap('<div class="prettydropdown' + ((oOptions.style==='arrow')?' arrow':'') + ' loading"></div>').before(sHtml).data('loaded', true);
+      $this.css('visibility', 'hidden').wrap('<div class="prettydropdown' + (oOptions.arrowStyle?' '+oOptions.arrowStyle:'') + ' loading"></div>').before(sHtml).data('loaded', true);
       var $dropdown = $('ul', $this.parent()),
         nWidth = $dropdown.outerWidth(true),
         nOuterWidth;
