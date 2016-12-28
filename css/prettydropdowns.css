@@ -34,6 +34,7 @@
 }
 .prettydropdown > ul.active {
   width: auto;
+  max-height: none !important;
   border-color: #1e90ff;
   overflow-x: hidden;
   overflow-y: auto;
@@ -42,7 +43,6 @@
 .prettydropdown > ul.active.reverse {
   top: auto;
   bottom: 0;
-  overflow-y: hidden;
 }
 .prettydropdown > ul > li {
   position: relative;
@@ -66,31 +66,46 @@
   background: #1e90ff;
   color: #fff;
 }
-.prettydropdown > ul > li.chevron:before, .prettydropdown > ul > li.chevron:after {
+.prettydropdown.arrow > ul > li.selected:before, .prettydropdown.arrow > ul > li.selected:after {
   position: absolute;
+  top: 8px;
+  bottom: 0;
   right: 0.8rem;
-  border: 8px solid transparent; /* Chevron size */
+  height: 16px;
+  border: 8px solid transparent; /* Arrow size */
+  box-sizing: border-box;
   content: '';
   display: block;
-  margin-top: 21px;
+  margin: auto;
 }
-.prettydropdown > ul > li.chevron:before {
-  border-top-color: #a9a9a9; /* Chevron color */
+.prettydropdown.arrow.small > ul > li.selected:before, .prettydropdown.arrow.small > ul > li.selected:after {
+  top: 4px;
+  height: 8px;
+  border-width: 4px;
 }
-.prettydropdown > ul > li.chevron:after {
-  top: -2px; /* Chevron thickness */
+.prettydropdown.arrow > ul > li.selected:before {
+  border-top-color: #a9a9a9; /* Arrow color */
+}
+.prettydropdown.arrow > ul > li.selected:after {
+  top: 4px; /* Chevron thickness */
   border-top-color: #fff; /* Match background colour */
 }
-.prettydropdown:hover > ul > li.chevron:before {
+.prettydropdown.arrow.small > ul > li.selected:after {
+  top: 2px; /* Chevron thickness */
+}
+.prettydropdown.arrow.triangle > ul > li.selected:after {
+  content: none;
+}
+.prettydropdown:hover > ul > li.selected:before {
   border-top-color: #7f7f7f;
 }
-.prettydropdown > ul.active > li.chevron:before {
+.prettydropdown > ul.active > li.selected:before {
   border-top-color: #1e90ff;
 }
-.prettydropdown > ul.active > li.chevron:hover:before {
+.prettydropdown > ul.active > li.selected:hover:before {
   border-top-color: #fff;
 }
-.prettydropdown > ul.active > li.chevron:hover:after {
+.prettydropdown > ul.active > li.selected:hover:after {
   background: none;
   border-top-color: #1e90ff;
 }
