@@ -32,12 +32,18 @@
           + $this.css('margin-right') + ' '
           + $this.css('margin-bottom') + ' '
           + $this.css('margin-left') + ';">',
-        sItemStyle = (oOptions.height!==50) ? ' style="height:' + (oOptions.height-2) + 'px;line-height:' + (oOptions.height-2) + 'px"' : '';
+        renderItem = function(el, sClass) {
+          return '<li data-value="' + el.value + '"'
+            + (el.title ? ' title="' + el.title + '"' : '')
+            + (sClass ? ' class="' + sClass + '"' : '')
+            + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2) + 'px;line-height:' + (oOptions.height-2) + 'px"' : '')
+            + '>' + el.text + '</li>';
+        };
       $('option:selected', $this).each(function() {
-        sHtml += '<li data-value="' + this.value + '" class="selected"' + sItemStyle + '>' + this.text + '</li>';
+        sHtml += renderItem(this, 'selected');
       });
       $('option:not(:selected)', $this).each(function() {
-        sHtml += '<li data-value="' + this.value + '"' + sItemStyle + '>' + this.text + '</li>';
+        sHtml += renderItem(this);
       });
       sHtml += '</ul>';
       $this.css('visibility', 'hidden').wrap('<div class="prettydropdown ' + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
@@ -84,6 +90,7 @@
         }
       });
       $dropdown.on('mouseleave', resetDropdown);
+      // Done with everything!
       $dropdown.parent().width(nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
     });
   };
