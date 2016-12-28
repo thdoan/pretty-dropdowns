@@ -24,7 +24,7 @@
             if ($dropdown.hasClass('reverse')) $dropdown.prepend($('li:last-child', $dropdown));
             $dropdown.removeClass('active reverse').css('height', '');
           }
-        }, oOptions.hoverIntent);
+        }, (o.type==='mouseleave') ? oOptions.hoverIntent : 0);
       };
     // Validate height; enforce minimum height
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
