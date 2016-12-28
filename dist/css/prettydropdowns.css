@@ -66,38 +66,38 @@
   background: #1e90ff;
   color: #fff;
 }
-.prettydropdown > ul > li.chevron:before, .prettydropdown > ul > li.chevron:after {
+.prettydropdown > ul > li.selected:before, .prettydropdown > ul > li.selected:after {
   position: absolute;
   top: 8px;
   bottom: 0;
   right: 0.8rem;
   height: 16px;
-  border: 8px solid transparent; /* Chevron size */
+  border: 8px solid transparent; /* Arrow size */
   box-sizing: border-box;
   content: '';
   display: block;
   margin: auto;
 }
-.prettydropdown > ul > li.chevron:before {
-  border-top-color: #a9a9a9; /* Chevron color */
+.prettydropdown > ul > li.selected:before {
+  border-top-color: #a9a9a9; /* Arrow color */
 }
-.prettydropdown > ul > li.chevron:after {
+.prettydropdown > ul > li.selected:after {
   top: 4px; /* Chevron thickness */
   border-top-color: #fff; /* Match background colour */
 }
-.prettydropdown.triangle > ul > li.chevron:after {
+.prettydropdown.triangle > ul > li.selected:after {
   content: none;
 }
-.prettydropdown:hover > ul > li.chevron:before {
+.prettydropdown:hover > ul > li.selected:before {
   border-top-color: #7f7f7f;
 }
-.prettydropdown > ul.active > li.chevron:before {
+.prettydropdown > ul.active > li.selected:before {
   border-top-color: #1e90ff;
 }
-.prettydropdown > ul.active > li.chevron:hover:before {
+.prettydropdown > ul.active > li.selected:hover:before {
   border-top-color: #fff;
 }
-.prettydropdown > ul.active > li.chevron:hover:after {
+.prettydropdown > ul.active > li.selected:hover:after {
   background: none;
   border-top-color: #1e90ff;
 }

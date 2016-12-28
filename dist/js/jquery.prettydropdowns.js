@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v1.1.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v2.0.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -34,7 +34,7 @@
           + $this.css('margin-left') + ';">',
         sStyle = (oOptions.height!==50) ? ' style="height:' + (oOptions.height-2) + 'px;line-height:' + (oOptions.height-2) + 'px"' : '';
       $('option:selected', $this).each(function() {
-        sHtml += '<li data-value="' + this.value + '" class="chevron"' + sStyle + '>' + this.text + '</li>';
+        sHtml += '<li data-value="' + this.value + '" class="selected"' + sStyle + '>' + this.text + '</li>';
       });
       $('option:not(:selected)', $this).each(function() {
         sHtml += '<li data-value="' + this.value + '"' + sStyle + '>' + this.text + '</li>';
@@ -60,9 +60,9 @@
       $('li', $dropdown).width(nWidth).click(function() {
         var $li = $(this);
         // Only update if different value selected
-        if ($dropdown.hasClass('active') && $li.data('value')!==$('li.chevron', $dropdown).data('value')) {
-          $('.chevron', $dropdown).removeClass('chevron');
-          $dropdown.prepend($li.addClass('chevron')).removeClass('reverse');
+        if ($dropdown.hasClass('active') && $li.data('value')!==$('li.selected', $dropdown).data('value')) {
+          $('.selected', $dropdown).removeClass('selected');
+          $dropdown.prepend($li.addClass('selected')).removeClass('reverse');
           // Sync <select> element
           $('option[value="' + $li.data('value') +'"]', $this).prop('selected', true);
           $this.trigger('change');
@@ -76,7 +76,7 @@
             nDropdownHeight = $dropdown.outerHeight(),
             nDropdownBottom = nOffsetTop + nDropdownHeight - nScrollTop;
           if (nDropdownBottom>nWinHeight) {
-            if (nOffsetTop-nScrollTop>=nDropdownHeight-oOptions.height) $dropdown.addClass('reverse').append($('li.chevron', $dropdown));
+            if (nOffsetTop-nScrollTop>=nDropdownHeight-oOptions.height) $dropdown.addClass('reverse').append($('li.selected', $dropdown));
             else $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
           }
         } else {
