@@ -85,6 +85,9 @@
   top: 4px; /* Chevron thickness */
   border-top-color: #fff; /* Match background colour */
 }
+.prettydropdown > ul > li.chevron.arrow:after {
+  content: none;
+}
 .prettydropdown:hover > ul > li.chevron:before {
   border-top-color: #7f7f7f;
 }

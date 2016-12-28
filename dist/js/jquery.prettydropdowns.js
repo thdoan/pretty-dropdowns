@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v1.0.6 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v1.1.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -7,7 +7,12 @@
  */
 
 (function($) {
-  $.fn.prettyDropdown = function() {
+  $.fn.prettyDropdown = function(oOptions) {
+    // Default options
+    oOptions = $.extend({
+      height: 50,
+      style: 'chevron'
+    }, oOptions);
     return this.each(function() {
       var $this = $(this);
       if ($this.data('loaded')) return true; // Continue
@@ -25,7 +30,7 @@
           $dropdown.removeClass('active reverse').css('height', '');
         };
       $('option:selected', $this).each(function() {
-        sHtml += '<li class="chevron" data-value="' + this.value + '">' + this.text + '</li>';
+        sHtml += '<li class="chevron' + ((oOptions.style==='arrow')?' arrow':'') + '" data-value="' + this.value + '">' + this.text + '</li>';
       });
       $('option:not(:selected)', $this).each(function() {
         sHtml += '<li data-value="' + this.value + '">' + this.text + '</li>';
