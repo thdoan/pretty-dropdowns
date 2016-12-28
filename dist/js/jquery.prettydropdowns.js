@@ -8,16 +8,24 @@
 
 (function($) {
   $.fn.prettyDropdown = function(oOptions) {
-    var resetDropdown = function(o) {
-        var $dropdown = $(o.currentTarget||o);
-        if ($dropdown.hasClass('reverse')) $dropdown.prepend($('li:last-child', $dropdown));
-        $dropdown.removeClass('active reverse').css('height', '');
-      };
     // Default options
     oOptions = $.extend({
       customClass: 'arrow',
-      height: 50
+      height: 50,
+      hoverIntent: 200
     }, oOptions);
+    var nTimer,
+      resetDropdown = function(o) {
+        var $dropdown = $(o.currentTarget||o);
+        $dropdown.data('hover', false);
+        clearTimeout(nTimer);
+        nTimer = setTimeout(function() {
+          if (!$dropdown.data('hover')) {
+            if ($dropdown.hasClass('reverse')) $dropdown.prepend($('li:last-child', $dropdown));
+            $dropdown.removeClass('active reverse').css('height', '');
+          }
+        }, oOptions.hoverIntent);
+      };
     // Validate height; enforce minimum height
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
     return this.each(function() {
@@ -89,7 +97,12 @@
           resetDropdown($dropdown[0]);
         }
       });
-      $dropdown.on('mouseleave', resetDropdown);
+      $dropdown.on({
+        mouseenter: function() {
+          $dropdown.data('hover', true);
+        },
+        mouseleave: resetDropdown
+      });
       // Done with everything!
       $dropdown.parent().width(nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
     });
