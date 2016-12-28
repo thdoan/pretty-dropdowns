@@ -26,8 +26,9 @@
           }
         }, (o.type==='mouseleave') ? oOptions.hoverIntent : 0);
       };
-    // Validate height; enforce minimum height
+    // Validate options
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
+    if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
     return this.each(function() {
       var $this = $(this);
       if ($this.data('loaded')) return true; // Continue
