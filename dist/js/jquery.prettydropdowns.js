@@ -8,14 +8,22 @@
 
 (function($) {
   $.fn.prettyDropdown = function(oOptions) {
+    var resetDropdown = function(o) {
+        var $dropdown = $(o.currentTarget||o);
+        if ($dropdown.hasClass('reverse')) $dropdown.prepend($('li:last-child', $dropdown));
+        $dropdown.removeClass('active reverse').css('height', '');
+      };
     // Default options
     oOptions = $.extend({
       height: 50,
       style: 'chevron'
     }, oOptions);
+    // Validate height; enforce minimum height
+    if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
     return this.each(function() {
       var $this = $(this);
       if ($this.data('loaded')) return true; // Continue
+      $this.outerHeight(oOptions.height);
       // NOTE: $this.css('margin') returns empty string in Firefox.
       // See https://github.com/jquery/jquery/issues/3383
       var nWidth = $this.outerWidth(),
@@ -24,19 +32,15 @@
           + $this.css('margin-right') + ' '
           + $this.css('margin-bottom') + ' '
           + $this.css('margin-left') + ';">',
-        resetDropdown = function(o) {
-          var $dropdown = $(o.currentTarget||o);
-          if ($dropdown.hasClass('reverse')) $dropdown.prepend($('li:last-child', $dropdown));
-          $dropdown.removeClass('active reverse').css('height', '');
-        };
+        sStyle = (oOptions.height!==50) ? ' style="height:' + (oOptions.height-2) + 'px;line-height:' + (oOptions.height-2) + 'px"' : '';
       $('option:selected', $this).each(function() {
-        sHtml += '<li class="chevron' + ((oOptions.style==='arrow')?' arrow':'') + '" data-value="' + this.value + '">' + this.text + '</li>';
+        sHtml += '<li data-value="' + this.value + '" class="chevron"' + sStyle + '>' + this.text + '</li>';
       });
       $('option:not(:selected)', $this).each(function() {
-        sHtml += '<li data-value="' + this.value + '">' + this.text + '</li>';
+        sHtml += '<li data-value="' + this.value + '"' + sStyle + '>' + this.text + '</li>';
       });
       sHtml += '</ul>';
-      $this.css('visibility', 'hidden').wrap('<div class="prettydropdown loading"></div>').before(sHtml).data('loaded', true);
+      $this.css('visibility', 'hidden').wrap('<div class="prettydropdown' + ((oOptions.style==='arrow')?' arrow':'') + ' loading"></div>').before(sHtml).data('loaded', true);
       var $dropdown = $('ul', $this.parent()),
         nWidth = $dropdown.outerWidth(true),
         nOuterWidth;
@@ -72,7 +76,7 @@
             nDropdownHeight = $dropdown.outerHeight(),
             nDropdownBottom = nOffsetTop + nDropdownHeight - nScrollTop;
           if (nDropdownBottom>nWinHeight) {
-            if (nOffsetTop-nScrollTop>=nDropdownHeight-50) $dropdown.addClass('reverse').append($('li.chevron', $dropdown));
+            if (nOffsetTop-nScrollTop>=nDropdownHeight-oOptions.height) $dropdown.addClass('reverse').append($('li.chevron', $dropdown));
             else $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
           }
         } else {
