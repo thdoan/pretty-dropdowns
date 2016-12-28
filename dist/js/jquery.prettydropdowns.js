@@ -15,7 +15,7 @@
       };
     // Default options
     oOptions = $.extend({
-      arrowStyle: 'chevron',
+      customClass: 'arrow',
       height: 50
     }, oOptions);
     // Validate height; enforce minimum height
@@ -32,15 +32,15 @@
           + $this.css('margin-right') + ' '
           + $this.css('margin-bottom') + ' '
           + $this.css('margin-left') + ';">',
-        sStyle = (oOptions.height!==50) ? ' style="height:' + (oOptions.height-2) + 'px;line-height:' + (oOptions.height-2) + 'px"' : '';
+        sItemStyle = (oOptions.height!==50) ? ' style="height:' + (oOptions.height-2) + 'px;line-height:' + (oOptions.height-2) + 'px"' : '';
       $('option:selected', $this).each(function() {
-        sHtml += '<li data-value="' + this.value + '" class="selected"' + sStyle + '>' + this.text + '</li>';
+        sHtml += '<li data-value="' + this.value + '" class="selected"' + sItemStyle + '>' + this.text + '</li>';
       });
       $('option:not(:selected)', $this).each(function() {
-        sHtml += '<li data-value="' + this.value + '"' + sStyle + '>' + this.text + '</li>';
+        sHtml += '<li data-value="' + this.value + '"' + sItemStyle + '>' + this.text + '</li>';
       });
       sHtml += '</ul>';
-      $this.css('visibility', 'hidden').wrap('<div class="prettydropdown' + (oOptions.arrowStyle?' '+oOptions.arrowStyle:'') + ' loading"></div>').before(sHtml).data('loaded', true);
+      $this.css('visibility', 'hidden').wrap('<div class="prettydropdown ' + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
       var $dropdown = $('ul', $this.parent()),
         nWidth = $dropdown.outerWidth(true),
         nOuterWidth;
