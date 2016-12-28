@@ -43,7 +43,6 @@
 .prettydropdown > ul.active.reverse {
   top: auto;
   bottom: 0;
-  overflow-y: hidden;
 }
 .prettydropdown > ul > li {
   position: relative;

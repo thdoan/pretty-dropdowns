@@ -88,10 +88,18 @@
             nOffsetTop = $dropdown.offset().top,
             nScrollTop = document.body.scrollTop,
             nDropdownHeight = $dropdown.outerHeight(),
-            nDropdownBottom = nOffsetTop + nDropdownHeight - nScrollTop;
+            nDropdownBottom = nOffsetTop-nScrollTop+nDropdownHeight;
           if (nDropdownBottom>nWinHeight) {
-            if (nOffsetTop-nScrollTop>=nDropdownHeight-oOptions.height) $dropdown.addClass('reverse').append($('li.selected', $dropdown));
-            else $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
+            // Expand to direction that has the most space
+            if (nOffsetTop-nScrollTop>nWinHeight-(nOffsetTop-nScrollTop+oOptions.height)) {
+              $dropdown.addClass('reverse').append($('li.selected', $dropdown));
+              if (nOffsetTop-nScrollTop+oOptions.height<nDropdownHeight) {
+                $dropdown.outerHeight(nOffsetTop-nScrollTop+oOptions.height);
+                $dropdown.scrollTop(nDropdownHeight);
+              }
+            } else {
+              $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
+            }
           }
         } else {
           resetDropdown($dropdown[0]);
