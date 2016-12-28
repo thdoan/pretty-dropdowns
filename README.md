@@ -44,7 +44,7 @@ $(document).ready(function() {
 
 Name          | Type   | Default | Description
 ------------- | ------ | ------- | -----------
-`customClass` | string | arrow   | The class name to customize the drop-down menu style. The default `arrow` class displays a chevron-type arrow. Two additional helper classes are built in (add either or both to `arrow`): `triangle` converts the chevron into a solid triangle; `small` renders the arrow icon at half size.
+`customClass` | string | arrow   | The class name to customize the drop-down menu style. The default `arrow` class displays a chevron-type arrow icon. Two additional helper classes are built in (add either or both to `arrow`): `triangle` converts the chevron into a solid triangle; `small` renders the arrow icon at half size.
 `height`      | number | 50      | The drop-down menu height.
 `hoverIntent` | number | 200     | The wait period (in milliseconds) before collapsing the drop-down menu after you hover off of it. If you hover back onto the menu within the wait period, it will remain open.
 
