@@ -68,17 +68,21 @@
 }
 .prettydropdown > ul > li.chevron:before, .prettydropdown > ul > li.chevron:after {
   position: absolute;
+  top: 8px;
+  bottom: 0;
   right: 0.8rem;
+  height: 16px;
   border: 8px solid transparent; /* Chevron size */
+  box-sizing: border-box;
   content: '';
   display: block;
-  margin-top: 21px;
+  margin: auto;
 }
 .prettydropdown > ul > li.chevron:before {
   border-top-color: #a9a9a9; /* Chevron color */
 }
 .prettydropdown > ul > li.chevron:after {
-  top: -2px; /* Chevron thickness */
+  top: 4px; /* Chevron thickness */
   border-top-color: #fff; /* Match background colour */
 }
 .prettydropdown:hover > ul > li.chevron:before {
