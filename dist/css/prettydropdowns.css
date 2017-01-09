@@ -12,6 +12,7 @@
   left: 0;
   background: #fff;
   border: 1px solid #a9a9a9;
+  box-sizing: content-box;
   color: #000;
   cursor: pointer;
   font: normal 18px Calibri, sans-serif;
