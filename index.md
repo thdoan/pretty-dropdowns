@@ -9,9 +9,9 @@ Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>`
 ### Step 1: Link the required files
 
 ```
-<link rel="stylesheet" href="/css/prettydropdowns.css">
+<link rel="stylesheet" href="//cdn.rawgit.com/thdoan/pretty-dropdowns/master/dist/css/prettydropdowns.css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="/js/jquery.prettydropdowns.js"></script>
+<script src="//cdn.rawgit.com/thdoan/pretty-dropdowns/master/dist/js/jquery.prettydropdowns.js"></script>
 ```
 
 You have complete control over the look and feel of the drop-down menu by modifying `prettydropdowns.css`. It is recommended to load the JavaScript files at the bottom just before the closing `</body>` tag if possible.
