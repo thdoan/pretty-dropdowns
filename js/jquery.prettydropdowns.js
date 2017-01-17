@@ -41,9 +41,10 @@
             sKey = ' ';
             break;
           case 33: // Page Up
+            // To be implemented
             return;
           case 34: // Page Down
-          //console.log(
+            // To be implemented
             return;
           case 35: // End
             toggleHover($current, 0);
