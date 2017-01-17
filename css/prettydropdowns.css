@@ -60,12 +60,25 @@
   display: block;
   padding-right: 0.8rem;
 }
+.prettydropdown > ul.changing > li {
+  color: transparent;
+}
 .prettydropdown > ul > li:first-child, .prettydropdown > ul.active > li {
   display: block;
 }
-.prettydropdown > ul.active > li:hover, .prettydropdown > ul.active > li:first-child:hover:after {
+.prettydropdown > ul.active > li:hover, .prettydropdown > ul.active > li.hover, .prettydropdown > ul.active > li:first-child:hover:after {
   background: #1e90ff;
   color: #fff;
+}
+.prettydropdown > ul.active > li.nohover {
+  background: inherit;
+  color: inherit;
+}
+.prettydropdown > ul.active > li.hover:before, .prettydropdown > ul.active > li.nohover:after {
+  border-top-color: #fff !important;
+}
+.prettydropdown > ul.active > li.hover:after, .prettydropdown > ul.active > li.nohover:before {
+  border-top-color: #1e90ff !important;
 }
 .prettydropdown.arrow > ul > li.selected:before, .prettydropdown.arrow > ul > li.selected:after {
   position: absolute;
