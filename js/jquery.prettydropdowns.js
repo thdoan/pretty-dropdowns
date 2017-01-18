@@ -15,19 +15,21 @@
       hoverIntent: 200
     }, oOptions);
     var nHoverIndex,
+      nLastIndex,
       nTimer,
       aKeys = [
         '0','1','2','3','4','5','6','7','8','9',,,,,,,,
         'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
       ],
       $current,
-      $target,
       handleKeypress = function(e) {
-        var sKey,
-          $dropdown = $('.prettydropdown > ul.active');
+        var $dropdown = $('.prettydropdown > ul.active'),
+          nItemsHeight = $dropdown.height()/(oOptions.height-2),
+          nItemsPerPage = nItemsHeight%1<0.5 ? Math.floor(nItemsHeight) : Math.ceil(nItemsHeight),
+          sKey;
         if (!$dropdown.length) return;
         nHoverIndex = $dropdown.children('li.hover').index();
-        if (nHoverIndex===-1) nHoverIndex = $dropdown.children('li.selected').index();
+        nLastIndex = $dropdown.children().length-1;
         $current = $dropdown.children().eq(nHoverIndex);
         $dropdown.data('lastKeypress', +new Date());
         switch (e.which) {
@@ -41,32 +43,32 @@
             sKey = ' ';
             break;
           case 33: // Page Up
-            // To be implemented
+            toggleHover($current, 0);
+            toggleHover($dropdown.children().eq(Math.max(nHoverIndex-nItemsPerPage-1, 0)), 1);
             return;
           case 34: // Page Down
-            // To be implemented
+            toggleHover($current, 0);
+            toggleHover($dropdown.children().eq(Math.min(nHoverIndex+nItemsPerPage-1, nLastIndex)), 1);
             return;
           case 35: // End
             toggleHover($current, 0);
-            toggleHover($dropdown.children('li:last-child'), 1);
+            toggleHover($dropdown.children().eq(nLastIndex), 1);
             return;
           case 36: // Home
             toggleHover($current, 0);
-            toggleHover($dropdown.children('li:first-child'), 1);
+            toggleHover($dropdown.children().eq(0), 1);
             return;
           case 38: // Up
-            $target = nHoverIndex ? $dropdown.children().eq(nHoverIndex-1) : $dropdown.children('li:last-child');
             toggleHover($current, 0);
             // If not already key-navigated or first item is selected, cycle to the last item;
             // else select the previous item
-            toggleHover($target, 1);
+            toggleHover(nHoverIndex ? $dropdown.children().eq(nHoverIndex-1) : $dropdown.children().eq(nLastIndex), 1);
             return;
           case 40: // Down
-            $target = nHoverIndex===$dropdown.children().length-1 ? $dropdown.children('li:first-child') : $dropdown.children().eq(nHoverIndex+1);
             toggleHover($current, 0);
             // If last item is selected, cycle to the first item;
             // else select the next item
-            toggleHover($target, 1);
+            toggleHover(nHoverIndex===nLastIndex ? $dropdown.children().eq(0) : $dropdown.children().eq(nHoverIndex+1), 1);
             return;
           default:
             sKey = aKeys[e.which-48];
@@ -105,13 +107,19 @@
       hoverDropdownItem = function(e) {
         var $dropdown = $(e.currentTarget);
         if (!$dropdown.hasClass('active') || new Date()-$dropdown.data('lastKeypress')<200) return;
-        toggleHover($dropdown.children(), 0, false);
-        toggleHover($(e.target), 1, false);
+        toggleHover($dropdown.children(), 0, 1);
+        toggleHover($(e.target), 1, 1);
       },
-      toggleHover = function($el, bOn, bScroll) {
+      toggleHover = function($el, bOn, bNoScroll) {
         if (bOn) {
           $el.removeClass('nohover').addClass('hover');
-          if ($el.length===1 && $current && bScroll!==false) $el[0].scrollIntoView($el.index()<$current.index());
+          if ($el.length===1 && $current && !bNoScroll) {
+            var $dropdown = $el.parent();
+            // setTimeout() is required or it will execute too early
+            if ($el.index()===0) setTimeout(function(){ $dropdown.scrollTop(0) });
+            else if ($el.index()===nLastIndex) setTimeout(function(){ $dropdown.scrollTop($dropdown.height()) });
+            else $el[0].scrollIntoView($el.index()<$current.index());
+          }
         } else {
           $el.removeClass('hover').addClass('nohover');
         }
@@ -126,6 +134,7 @@
       // NOTE: $this.css('margin') returns empty string in Firefox.
       // See https://github.com/jquery/jquery/issues/3383
       var nWidth = $this.outerWidth(),
+        // Height - 2px for borders
         sHtml = '<ul' + ($this.attr('title')?' title="'+$this.attr('title')+'"':'') + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
           + $this.css('margin-top') + ' '
           + $this.css('margin-right') + ' '
