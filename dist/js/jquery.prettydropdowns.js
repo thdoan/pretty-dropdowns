@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v3.0.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v3.1.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -28,6 +28,8 @@
           nItemsPerPage = nItemsHeight%1<0.5 ? Math.floor(nItemsHeight) : Math.ceil(nItemsHeight),
           sKey;
         if (!$dropdown.length) return;
+        e.preventDefault();
+        e.stopPropagation();
         nHoverIndex = $dropdown.children('li.hover').index();
         nLastIndex = $dropdown.children().length-1;
         $current = $dropdown.children().eq(nHoverIndex);
@@ -100,7 +102,7 @@
             $dropdown.removeClass('active changing reverse').css('height', '');
             $dropdown.children().removeClass('hover nohover');
             $dropdown.removeData('clicked');
-            $('body').off('keydown', handleKeypress);
+            $(window).off('keydown', handleKeypress);
           }
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
       },
@@ -114,11 +116,18 @@
         if (bOn) {
           $el.removeClass('nohover').addClass('hover');
           if ($el.length===1 && $current && !bNoScroll) {
-            var $dropdown = $el.parent();
-            // setTimeout() is required or it will execute too early
-            if ($el.index()===0) setTimeout(function(){ $dropdown.scrollTop(0) });
-            else if ($el.index()===nLastIndex) setTimeout(function(){ $dropdown.scrollTop($dropdown.height()) });
-            else $el[0].scrollIntoView($el.index()<$current.index());
+            // Ensure items are always in view
+            var $dropdown = $el.parent(),
+              nDropdownHeight = $dropdown.outerHeight(),
+              nItemOffset = $el.offset().top-$dropdown.offset().top-1; // -1px for top border
+            if ($el.index()===0) {
+              $dropdown.scrollTop(0);
+            } else if ($el.index()===nLastIndex) {
+              $dropdown.scrollTop($dropdown.children().length*oOptions.height);
+            } else {
+              if (nItemOffset+oOptions.height>nDropdownHeight) $dropdown.scrollTop($dropdown.scrollTop()+oOptions.height+nItemOffset-nDropdownHeight);
+              else if (nItemOffset<0) $dropdown.scrollTop($dropdown.scrollTop()+nItemOffset);
+            }
           }
         } else {
           $el.removeClass('hover').addClass('nohover');
@@ -201,7 +210,7 @@
               $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
             }
           }
-          $('body').on('keydown', handleKeypress);
+          $(window).on('keydown', handleKeypress);
         } else {
           $dropdown.addClass('changing').data('clicked', true); // Prevent FOUC
           resetDropdown($dropdown[0]);
