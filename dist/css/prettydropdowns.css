@@ -71,8 +71,8 @@
   color: #fff;
 }
 .prettydropdown > ul.active > li.nohover {
-  background: inherit;
-  color: inherit;
+  background: inherit !important;
+  color: inherit !important;
 }
 .prettydropdown > ul.active > li.hover:before, .prettydropdown > ul.active > li.nohover:after {
   border-top-color: #fff !important;
