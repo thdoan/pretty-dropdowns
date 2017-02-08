@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v3.1.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v3.1.1 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -81,15 +81,27 @@
           nTimer = setTimeout(function() {
             $dropdown.removeData('keysPressed');
           }, 300);
-          $dropdown.children().each(function() {
-            if (this===$current[0]) return true;
-            var $this = $(this);
-            if ($this.text().toLowerCase().indexOf($dropdown.data('keysPressed'))===0) {
-              toggleHover($dropdown.children(), 0);
-              toggleHover($this, 1);
-              return false;
-            }
+          // Build index of matches
+          var aMatches = [],
+            nCurrentIndex = $current.index(),
+            $items = $dropdown.children();
+          $items.each(function(nIndex) {
+            if ($(this).text().toLowerCase().indexOf($dropdown.data('keysPressed'))===0) aMatches.push(nIndex);
           });
+          if (aMatches.length) {
+            // Cycle through items matching key(s) pressed
+            for (var i=0; i<aMatches.length; ++i) {
+              if (aMatches[i]>nCurrentIndex) {
+                toggleHover($items, 0);
+                toggleHover($items.eq(aMatches[i]), 1);
+                break;
+              }
+              if (i===aMatches.length-1) {
+                toggleHover($items, 0);
+                toggleHover($items.eq(aMatches[0]), 1);
+              }
+            }
+          }
         }
       },
       resetDropdown = function(o) {
