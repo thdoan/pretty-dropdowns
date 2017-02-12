@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v3.1.1 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v3.1.2 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -192,7 +192,8 @@
         $clone.remove();
       }
       // Set dropdown width and event handler
-      $dropdown.children('li').width(nWidth).click(function() {
+      // Add 0.5px slack to prevent missing right border with scrollbar
+      $dropdown.children('li').width(nWidth+0.5).click(function() {
         var $li = $(this);
         // Only update if different value selected
         if ($dropdown.hasClass('active') && $li.data('value')!==$dropdown.children('li.selected').data('value')) {
