@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v3.1.2 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v3.1.3 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -192,8 +192,11 @@
         $clone.remove();
       }
       // Set dropdown width and event handler
-      // Add 0.5px slack to prevent missing right border with scrollbar
-      $dropdown.children('li').width(nWidth+0.5).click(function() {
+      // NOTE: Setting width using width(), then css() because width() only can
+      // return a float, which can result in a missing right border when there
+      // is a scrollbar.
+      $dropdown.children('li').width(nWidth);
+      $dropdown.children('li').css('width', $dropdown.children('li').css('width')).click(function() {
         var $li = $(this);
         // Only update if different value selected
         if ($dropdown.hasClass('active') && $li.data('value')!==$dropdown.children('li.selected').data('value')) {
