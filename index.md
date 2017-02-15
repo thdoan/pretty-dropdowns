@@ -48,6 +48,20 @@ Name          | Type   | Default | Description
 `height`      | number | 50      | The drop-down menu height.
 `hoverIntent` | number | 200     | The wait period (in milliseconds) before collapsing the drop-down menu after you hover off of it. If you hover back onto the menu within the wait period, it will remain open.
 
+## Keyboard Navigation
+
+Key     | Description
+------- | -----------
+`Enter` | Select highlighted item.
+`Esc`   | Close the drop-down menu.
+`Home`  | Jump to the first item in the drop-down menu.
+`End`   | Jump to the last item in the drop-down menu.
+`PgUp`  | Go to the previous page of items. If there is no scrollbar, then this is the same as `Home`.
+`PgDn`  | Go to the next page of items. If there is no scrollbar, then this is the same as `End`.
+`Up`    | Highlight the previous item in the drop-down menu.
+`Down`  | Highlight the next item in the drop-down menu.
+`A`-`Z`<br>`0`-`9`<br>`Space` | Jump to the first item matching the key(s) pressed. Every time you press a key it will cycle through the matching items. **Hint:** if you type fast enough, it will try to find a match for everything you typed instead of just the first character.
+
 ## Installation
 
 Choose from one of the following methods:
