@@ -1,6 +1,6 @@
 # jQuery Pretty Dropdowns
 
-Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>` drop-down menus into "pretty" menus that you can style using CSS. Full keyboard navigation is supported (you can go directly to a menu option by typing its text). As an extra bonus, it does its best to keep the menu options within the viewport.
+Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>` drop-down menus into "pretty" menus that you can style using CSS. Full keyboard navigation is supported (you can go directly to a menu item by typing its text). As an extra bonus, when you open the menu it does its best to keep the menu items within the viewport.
 
 **[See a demo &raquo;](https://thdoan.github.io/pretty-dropdowns/demo.html)**
 
