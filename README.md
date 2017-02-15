@@ -60,7 +60,7 @@ Key     | Description
 `PgDn`  | Go to the next page of items. If there is no scrollbar, then this is the same as `End`.
 `Up`    | Highlight the previous item in the drop-down menu.
 `Down`  | Highlight the next item in the drop-down menu.
-`a`-`z`<br>`0`-`9`<br>`Space` | Jump to the first item matching the key(s) pressed. Every time you press a key it will cycle through the matching items. Hint: if you type fast enough, it will try to find a match for everything you typed instead of just the first character.
+`A`-`Z`<br>`0`-`9`<br>`Space` | Jump to the first item matching the key(s) pressed. Every time you press a key it will cycle through the matching items. **Hint:** if you type fast enough, it will try to find a match for everything you typed instead of just the first character.
 
 ## Installation
 
