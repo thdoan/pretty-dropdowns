@@ -23,26 +23,36 @@
       ],
       $current,
       handleKeypress = function(e) {
-        var $dropdown = $('.prettydropdown > ul.active'),
+        var $dropdown = $('.prettydropdown > ul.active, .prettydropdown > ul:focus'),
+          isOpen = $dropdown.hasClass('active'),
           nItemsHeight = $dropdown.height()/(oOptions.height-2),
           nItemsPerPage = nItemsHeight%1<0.5 ? Math.floor(nItemsHeight) : Math.ceil(nItemsHeight),
           sKey;
         if (!$dropdown.length) return;
-        e.preventDefault();
-        e.stopPropagation();
-        nHoverIndex = $dropdown.children('li.hover').index();
+        if (e.which!==9) {
+          // Intercept non-Tab keys
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        nHoverIndex = Math.max(0, $dropdown.children('li.hover').index());
         nLastIndex = $dropdown.children().length-1;
         $current = $dropdown.children().eq(nHoverIndex);
         $dropdown.data('lastKeypress', +new Date());
         switch (e.which) {
           case 13: // Enter
+            if (!isOpen) toggleHover($current, 1);
             $current.click();
             return;
           case 27: // Esc
             resetDropdown($dropdown[0]);
             return;
           case 32: // Space
-            sKey = ' ';
+            if (isOpen) {
+              sKey = ' ';
+            } else {
+              toggleHover($current, 1);
+              $current.click();
+            }
             break;
           case 33: // Page Up
             toggleHover($current, 0);
@@ -104,6 +114,12 @@
           }
         }
       },
+      hoverDropdownItem = function(e) {
+        var $dropdown = $(e.currentTarget);
+        if (!$dropdown.hasClass('active') || new Date()-$dropdown.data('lastKeypress')<200) return;
+        toggleHover($dropdown.children(), 0, 1);
+        toggleHover($(e.target), 1, 1);
+      },
       resetDropdown = function(o) {
         var $dropdown = $(o.currentTarget||o);
         $dropdown.data('hover', false);
@@ -114,27 +130,29 @@
             $dropdown.removeClass('active changing reverse').css('height', '');
             $dropdown.children().removeClass('hover nohover');
             $dropdown.removeData('clicked');
-            $(window).off('keydown', handleKeypress);
           }
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
       },
-      hoverDropdownItem = function(e) {
-        var $dropdown = $(e.currentTarget);
-        if (!$dropdown.hasClass('active') || new Date()-$dropdown.data('lastKeypress')<200) return;
-        toggleHover($dropdown.children(), 0, 1);
-        toggleHover($(e.target), 1, 1);
+      selectDropdownItem = function($li) {
+        var $dropdown = $li.parent(),
+          $select = $dropdown.parent().find('select');
+        $dropdown.children('li.selected').removeClass('selected');
+        $dropdown.prepend($li.addClass('selected')).removeClass('reverse');
+        // Sync <select> element
+        $select.children('option[value="' + $li.data('value') +'"]').prop('selected', true);
+        $select.trigger('change');
       },
-      toggleHover = function($el, bOn, bNoScroll) {
+      toggleHover = function($li, bOn, bNoScroll) {
         if (bOn) {
-          $el.removeClass('nohover').addClass('hover');
-          if ($el.length===1 && $current && !bNoScroll) {
+          $li.removeClass('nohover').addClass('hover');
+          if ($li.length===1 && $current && !bNoScroll) {
             // Ensure items are always in view
-            var $dropdown = $el.parent(),
+            var $dropdown = $li.parent(),
               nDropdownHeight = $dropdown.outerHeight(),
-              nItemOffset = $el.offset().top-$dropdown.offset().top-1; // -1px for top border
-            if ($el.index()===0) {
+              nItemOffset = $li.offset().top-$dropdown.offset().top-1; // -1px for top border
+            if ($li.index()===0) {
               $dropdown.scrollTop(0);
-            } else if ($el.index()===nLastIndex) {
+            } else if ($li.index()===nLastIndex) {
               $dropdown.scrollTop($dropdown.children().length*oOptions.height);
             } else {
               if (nItemOffset+oOptions.height>nDropdownHeight) $dropdown.scrollTop($dropdown.scrollTop()+oOptions.height+nItemOffset-nDropdownHeight);
@@ -142,25 +160,25 @@
             }
           }
         } else {
-          $el.removeClass('hover').addClass('nohover');
+          $li.removeClass('hover').addClass('nohover');
         }
       };
     // Validate options
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
     return this.each(function() {
-      var $this = $(this);
-      if ($this.data('loaded')) return true; // Continue
-      $this.outerHeight(oOptions.height);
-      // NOTE: $this.css('margin') returns empty string in Firefox.
-      // See https://github.com/jquery/jquery/issues/3383
-      var nWidth = $this.outerWidth(),
+      var $select = $(this);
+      if ($select.data('loaded')) return true; // Continue
+      $select.outerHeight(oOptions.height);
+      var nWidth = $select.outerWidth(),
         // Height - 2px for borders
-        sHtml = '<ul' + ($this.attr('title')?' title="'+$this.attr('title')+'"':'') + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
-          + $this.css('margin-top') + ' '
-          + $this.css('margin-right') + ' '
-          + $this.css('margin-bottom') + ' '
-          + $this.css('margin-left') + ';">',
+        sHtml = '<ul' + ($select.attr('title')?' title="'+$select.attr('title')+'"':'') + ' tabindex="0" style="max-height:' + (oOptions.height-2) + 'px;margin:'
+          // NOTE: $select.css('margin') returns empty string in Firefox.
+          // See https://github.com/jquery/jquery/issues/3383
+          + $select.css('margin-top') + ' '
+          + $select.css('margin-right') + ' '
+          + $select.css('margin-bottom') + ' '
+          + $select.css('margin-left') + ';">',
         renderItem = function(el, sClass) {
           return '<li data-value="' + el.value + '"'
             + (el.title ? ' title="' + el.title + '"' : '')
@@ -168,15 +186,15 @@
             + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2) + 'px;line-height:' + (oOptions.height-2) + 'px"' : '')
             + '>' + el.text + '</li>';
         };
-      $this.children('option:selected').each(function() {
+      $select.children('option:selected').each(function() {
         sHtml += renderItem(this, 'selected');
       });
-      $this.children('option:not(:selected)').each(function() {
+      $select.children('option:not(:selected)').each(function() {
         sHtml += renderItem(this);
       });
       sHtml += '</ul>';
-      $this.css('visibility', 'hidden').wrap('<div class="prettydropdown ' + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
-      var $dropdown = $this.parent().children('ul'),
+      $select.css('visibility', 'hidden').wrap('<div class="prettydropdown ' + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
+      var $dropdown = $select.parent().children('ul'),
         nWidth = $dropdown.outerWidth(true),
         nOuterWidth;
       // Calculate width if initially hidden
@@ -197,14 +215,9 @@
       // is a scrollbar.
       $dropdown.children('li').width(nWidth);
       $dropdown.children('li').css('width', $dropdown.children('li').css('width')).click(function() {
-        var $li = $(this);
         // Only update if different value selected
-        if ($dropdown.hasClass('active') && $li.data('value')!==$dropdown.children('li.selected').data('value')) {
-          $dropdown.children('li.selected').removeClass('selected');
-          $dropdown.prepend($li.addClass('selected')).removeClass('reverse');
-          // Sync <select> element
-          $this.children('option[value="' + $li.data('value') +'"]').prop('selected', true);
-          $this.trigger('change');
+        if ($dropdown.hasClass('active') && $(this).data('value')!==$dropdown.children('li.selected').data('value')) {
+          selectDropdownItem($(this));
         }
         $dropdown.toggleClass('active');
         // Try to keep drop-down menu within viewport
@@ -226,13 +239,19 @@
               $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
             }
           }
-          $(window).on('keydown', handleKeypress);
         } else {
-          $dropdown.addClass('changing').data('clicked', true); // Prevent FOUC
+          $dropdown.addClass('changing').data('clicked', true); // Prevent FOUC in reverse menu
           resetDropdown($dropdown[0]);
         }
       });
       $dropdown.on({
+        focusin: function() {
+          // Unregister any existing handlers first to prevent duplicate firings
+          $(window).off('keydown', handleKeypress).on('keydown', handleKeypress);
+        },
+        focusout: function() {
+          $(window).off('keydown', handleKeypress);
+        },
         mouseenter: function() {
           $dropdown.data('hover', true);
         },

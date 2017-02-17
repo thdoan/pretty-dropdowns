@@ -41,6 +41,9 @@
   overflow-y: auto;
   z-index: 2;
 }
+.prettydropdown > ul.active:focus {
+  outline: none;
+}
 .prettydropdown > ul.active.reverse {
   top: auto;
   bottom: 0;
