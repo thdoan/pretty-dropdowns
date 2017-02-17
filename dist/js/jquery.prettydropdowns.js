@@ -30,8 +30,11 @@
           nItemsPerPage = nItemsHeight%1<0.5 ? Math.floor(nItemsHeight) : Math.ceil(nItemsHeight),
           sKey;
         if (!$dropdown.length) return;
-        if (e.which!==9) {
-          // Intercept non-Tab keys
+        if (e.which===9) { // Tab
+          resetDropdown($dropdown[0]);
+          return;
+        } else {
+          // Intercept non-Tab keys only
           e.preventDefault();
           e.stopPropagation();
         }
