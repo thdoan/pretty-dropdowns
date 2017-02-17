@@ -76,8 +76,8 @@
             return;
           case 38: // Up
             toggleHover($current, 0);
-            // If not already key-navigated or first item is selected, cycle to the last item;
-            // else select the previous item
+            // If not already key-navigated or first item is selected, cycle to
+            // the last item; else select the previous item
             toggleHover(nHoverIndex ? $items.eq(nHoverIndex-1) : $items.eq(nLastIndex), 1);
             return;
           case 40: // Down
@@ -128,7 +128,7 @@
       resetDropdown = function(o) {
         var $dropdown = $(o.currentTarget||o);
         // NOTE: Sometimes it's possible for $dropdown to point to the wrong
-        // element when you quickly hover another menu. To prevent this, we
+        // element when you quickly hover over another menu. To prevent this, we
         // need to check for .active as a backup.
         if (!$dropdown.hasClass('active')) $dropdown = $('.prettydropdown > ul.active');
         $dropdown.data('hover', false);
