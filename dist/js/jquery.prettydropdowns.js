@@ -129,7 +129,7 @@
             if ($dropdown.hasClass('reverse')) $dropdown.prepend($dropdown.children('li:last-child'));
             $dropdown.removeClass('active changing reverse').css('height', '');
             $dropdown.children().removeClass('hover nohover');
-            $dropdown.removeData('clicked');
+            $dropdown.removeData('clicked').attr('aria-expanded', 'false');
           }
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
       },
@@ -137,8 +137,7 @@
         var $dropdown = $li.parent(),
           $select = $dropdown.parent().find('select');
         $dropdown.children('li.selected').removeClass('selected');
-        $dropdown.prepend($li.addClass('selected')).removeClass('reverse');
-        $dropdown.attr('aria-activedescendant', $li.attr('id'));
+        $dropdown.prepend($li.addClass('selected')).removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
         // Sync <select> element
         $select.children('option[value="' + $li.data('value') +'"]').prop('selected', true);
         $select.trigger('change');
@@ -177,7 +176,7 @@
         // Height - 2px for borders
         sHtml = '<ul' + ($select.attr('title')?' title="'+$select.attr('title')+'"':'')
           + ' tabindex="0" role="listbox" aria-activedescendant="item' + nTimestamp
-          + '-1" style="max-height:' + (oOptions.height-2) + 'px;margin:'
+          + '-1" aria-expanded="false" style="max-height:' + (oOptions.height-2) + 'px;margin:'
           // NOTE: $select.css('margin') returns empty string in Firefox.
           // See https://github.com/jquery/jquery/issues/3383
           + $select.css('margin-top') + ' '
@@ -249,6 +248,7 @@
               $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
             }
           }
+          $dropdown.attr('aria-expanded', 'true');
         } else {
           $dropdown.addClass('changing').data('clicked', true); // Prevent FOUC in reverse menu
           resetDropdown($dropdown[0]);
