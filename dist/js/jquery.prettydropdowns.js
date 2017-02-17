@@ -14,14 +14,14 @@
       height: 50,
       hoverIntent: 200
     }, oOptions);
-    var nHoverIndex,
-      nLastIndex,
-      nTimer,
+    var $current,
       aKeys = [
         '0','1','2','3','4','5','6','7','8','9',,,,,,,,
         'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
       ],
-      $current,
+      nHoverIndex,
+      nLastIndex,
+      nTimer,
       handleKeypress = function(e) {
         var $dropdown = $('.prettydropdown > ul.active, .prettydropdown > ul:focus'),
           isOpen = $dropdown.hasClass('active'),
@@ -92,9 +92,9 @@
             $dropdown.removeData('keysPressed');
           }, 300);
           // Build index of matches
-          var aMatches = [],
-            nCurrentIndex = $current.index(),
-            $items = $dropdown.children();
+          var $items = $dropdown.children(),
+            aMatches = [],
+            nCurrentIndex = $current.index();
           $items.each(function(nIndex) {
             if ($(this).text().toLowerCase().indexOf($dropdown.data('keysPressed'))===0) aMatches.push(nIndex);
           });
@@ -125,12 +125,11 @@
         $dropdown.data('hover', false);
         clearTimeout(nTimer);
         nTimer = setTimeout(function() {
-          if (!$dropdown.data('hover')) {
-            if ($dropdown.hasClass('reverse')) $dropdown.prepend($dropdown.children('li:last-child'));
-            $dropdown.removeClass('active changing reverse').css('height', '');
-            $dropdown.children().removeClass('hover nohover');
-            $dropdown.removeData('clicked').attr('aria-expanded', 'false');
-          }
+          if ($dropdown.data('hover')) return;
+          if ($dropdown.hasClass('reverse')) $dropdown.prepend($dropdown.children('li:last-child'));
+          $dropdown.removeClass('active changing reverse').css('height', '');
+          $dropdown.children().removeClass('hover nohover');
+          $dropdown.removeData('clicked').attr('aria-expanded', 'false');
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
       },
       selectDropdownItem = function($li) {
