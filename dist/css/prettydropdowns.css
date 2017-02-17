@@ -63,9 +63,6 @@
   display: block;
   padding-right: 0.8rem;
 }
-.prettydropdown > ul.changing > li {
-  color: transparent;
-}
 .prettydropdown > ul > li:first-child, .prettydropdown > ul.active > li {
   display: block;
 }

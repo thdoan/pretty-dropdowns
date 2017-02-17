@@ -90,6 +90,8 @@
           $dropdown.data('keysPressed', $dropdown.data('keysPressed')===undefined ? sKey : $dropdown.data('keysPressed') + sKey);
           nTimer = setTimeout(function() {
             $dropdown.removeData('keysPressed');
+            // NOTE: Windows keyboard repeat delay is 250-1000 ms. See
+            // https://technet.microsoft.com/en-us/library/cc978658.aspx
           }, 300);
           // Build index of matches
           var $items = $dropdown.children(),
@@ -127,7 +129,7 @@
         nTimer = setTimeout(function() {
           if ($dropdown.data('hover')) return;
           if ($dropdown.hasClass('reverse')) $dropdown.prepend($dropdown.children('li:last-child'));
-          $dropdown.removeClass('active changing reverse').css('height', '');
+          $dropdown.removeClass('active reverse').css('height', '');
           $dropdown.children().removeClass('hover nohover');
           $dropdown.removeData('clicked').attr('aria-expanded', 'false');
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
@@ -249,7 +251,7 @@
           }
           $dropdown.attr('aria-expanded', 'true');
         } else {
-          $dropdown.addClass('changing').data('clicked', true); // Prevent FOUC in reverse menu
+          $dropdown.data('clicked', true);
           resetDropdown($dropdown[0]);
         }
       });
