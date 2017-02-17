@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v3.1.3 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v3.3.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -138,6 +138,7 @@
           $select = $dropdown.parent().find('select');
         $dropdown.children('li.selected').removeClass('selected');
         $dropdown.prepend($li.addClass('selected')).removeClass('reverse');
+        $dropdown.attr('aria-activedescendant', $li.attr('id'));
         // Sync <select> element
         $select.children('option[value="' + $li.data('value') +'"]').prop('selected', true);
         $select.trigger('change');
@@ -170,9 +171,13 @@
       var $select = $(this);
       if ($select.data('loaded')) return true; // Continue
       $select.outerHeight(oOptions.height);
-      var nWidth = $select.outerWidth(),
+      var nCount = 0,
+        nTimestamp = +new Date(),
+        nWidth = $select.outerWidth(),
         // Height - 2px for borders
-        sHtml = '<ul' + ($select.attr('title')?' title="'+$select.attr('title')+'"':'') + ' tabindex="0" style="max-height:' + (oOptions.height-2) + 'px;margin:'
+        sHtml = '<ul' + ($select.attr('title')?' title="'+$select.attr('title')+'"':'')
+          + ' tabindex="0" role="listbox" aria-activedescendant="item' + nTimestamp
+          + '-1" style="max-height:' + (oOptions.height-2) + 'px;margin:'
           // NOTE: $select.css('margin') returns empty string in Firefox.
           // See https://github.com/jquery/jquery/issues/3383
           + $select.css('margin-top') + ' '
@@ -180,16 +185,21 @@
           + $select.css('margin-bottom') + ' '
           + $select.css('margin-left') + ';">',
         renderItem = function(el, sClass) {
-          return '<li data-value="' + el.value + '"'
+          return '<li id="item' + nTimestamp + '-' + nCount
+            + '" data-value="' + el.value + '"'
             + (el.title ? ' title="' + el.title + '"' : '')
             + (sClass ? ' class="' + sClass + '"' : '')
-            + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2) + 'px;line-height:' + (oOptions.height-2) + 'px"' : '')
+            + ' role="option"'
+            + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
+            + 'px;line-height:' + (oOptions.height-2) + 'px"' : '')
             + '>' + el.text + '</li>';
         };
       $select.children('option:selected').each(function() {
+        ++nCount;
         sHtml += renderItem(this, 'selected');
       });
       $select.children('option:not(:selected)').each(function() {
+        ++nCount;
         sHtml += renderItem(this);
       });
       sHtml += '</ul>';
