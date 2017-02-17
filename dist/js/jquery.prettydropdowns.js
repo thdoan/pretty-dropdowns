@@ -24,6 +24,7 @@
       nTimer,
       handleKeypress = function(e) {
         var $dropdown = $('.prettydropdown > ul.active, .prettydropdown > ul:focus'),
+          $items = $dropdown.children(),
           isOpen = $dropdown.hasClass('active'),
           nItemsHeight = $dropdown.height()/(oOptions.height-2),
           nItemsPerPage = nItemsHeight%1<0.5 ? Math.floor(nItemsHeight) : Math.ceil(nItemsHeight),
@@ -35,8 +36,8 @@
           e.stopPropagation();
         }
         nHoverIndex = Math.max(0, $dropdown.children('li.hover').index());
-        nLastIndex = $dropdown.children().length-1;
-        $current = $dropdown.children().eq(nHoverIndex);
+        nLastIndex = $items.length-1;
+        $current = $items.eq(nHoverIndex);
         $dropdown.data('lastKeypress', +new Date());
         switch (e.which) {
           case 13: // Enter
@@ -56,31 +57,31 @@
             break;
           case 33: // Page Up
             toggleHover($current, 0);
-            toggleHover($dropdown.children().eq(Math.max(nHoverIndex-nItemsPerPage-1, 0)), 1);
+            toggleHover($items.eq(Math.max(nHoverIndex-nItemsPerPage-1, 0)), 1);
             return;
           case 34: // Page Down
             toggleHover($current, 0);
-            toggleHover($dropdown.children().eq(Math.min(nHoverIndex+nItemsPerPage-1, nLastIndex)), 1);
+            toggleHover($items.eq(Math.min(nHoverIndex+nItemsPerPage-1, nLastIndex)), 1);
             return;
           case 35: // End
             toggleHover($current, 0);
-            toggleHover($dropdown.children().eq(nLastIndex), 1);
+            toggleHover($items.eq(nLastIndex), 1);
             return;
           case 36: // Home
             toggleHover($current, 0);
-            toggleHover($dropdown.children().eq(0), 1);
+            toggleHover($items.eq(0), 1);
             return;
           case 38: // Up
             toggleHover($current, 0);
             // If not already key-navigated or first item is selected, cycle to the last item;
             // else select the previous item
-            toggleHover(nHoverIndex ? $dropdown.children().eq(nHoverIndex-1) : $dropdown.children().eq(nLastIndex), 1);
+            toggleHover(nHoverIndex ? $items.eq(nHoverIndex-1) : $items.eq(nLastIndex), 1);
             return;
           case 40: // Down
             toggleHover($current, 0);
             // If last item is selected, cycle to the first item;
             // else select the next item
-            toggleHover(nHoverIndex===nLastIndex ? $dropdown.children().eq(0) : $dropdown.children().eq(nHoverIndex+1), 1);
+            toggleHover(nHoverIndex===nLastIndex ? $items.eq(0) : $items.eq(nHoverIndex+1), 1);
             return;
           default:
             sKey = aKeys[e.which-48];
@@ -94,8 +95,7 @@
             // https://technet.microsoft.com/en-us/library/cc978658.aspx
           }, 300);
           // Build index of matches
-          var $items = $dropdown.children(),
-            aMatches = [],
+          var aMatches = [],
             nCurrentIndex = $current.index();
           $items.each(function(nIndex) {
             if ($(this).text().toLowerCase().indexOf($dropdown.data('keysPressed'))===0) aMatches.push(nIndex);
@@ -118,12 +118,16 @@
       },
       hoverDropdownItem = function(e) {
         var $dropdown = $(e.currentTarget);
-        if (!$dropdown.hasClass('active') || new Date()-$dropdown.data('lastKeypress')<200) return;
+        if ($dropdown[0]===e.target || !$dropdown.hasClass('active') || new Date()-$dropdown.data('lastKeypress')<200) return;
         toggleHover($dropdown.children(), 0, 1);
         toggleHover($(e.target), 1, 1);
       },
       resetDropdown = function(o) {
         var $dropdown = $(o.currentTarget||o);
+        // NOTE: Sometimes it's possible for $dropdown to point to the wrong
+        // element when you quickly hover another menu. To prevent this, we
+        // need to check for .active as a backup.
+        if (!$dropdown.hasClass('active')) $dropdown = $('.prettydropdown > ul.active');
         $dropdown.data('hover', false);
         clearTimeout(nTimer);
         nTimer = setTimeout(function() {
@@ -223,8 +227,7 @@
       // NOTE: Setting width using width(), then css() because width() only can
       // return a float, which can result in a missing right border when there
       // is a scrollbar.
-      $dropdown.children('li').width(nWidth);
-      $dropdown.children('li').css('width', $dropdown.children('li').css('width')).click(function() {
+      $dropdown.children().width(nWidth).css('width', $dropdown.children().css('width')).click(function() {
         // Only update if different value selected
         if ($dropdown.hasClass('active') && $(this).data('value')!==$dropdown.children('li.selected').data('value')) {
           selectDropdownItem($(this));
@@ -232,6 +235,10 @@
         $dropdown.toggleClass('active');
         // Try to keep drop-down menu within viewport
         if ($dropdown.hasClass('active')) {
+          // Close any other open menus
+          if ($('.prettydropdown > ul.active').length>1) {
+            resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
+          }
           var nWinHeight = window.innerHeight,
             nOffsetTop = $dropdown.offset().top,
             nScrollTop = document.body.scrollTop,
