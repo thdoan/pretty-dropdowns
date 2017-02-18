@@ -57,19 +57,19 @@ Name          | Type   | Default | Description
 
 ## Keyboard Navigation
 
-Key     | Menu Closed | Menu Open
-------- | ----------- | ---------
-`Tab`   | Put focus on the next drop-down menu. |
-`Shift`+`Tab` | Put focus on the previous drop-down menu. |
-`Enter` | Open the drop-down menu. | Select the highlighted item.
-`Esc`   | | Close the drop-down menu.
-`Home`  | | Jump to the first item in the drop-down menu.
-`End`   | | Jump to the last item in the drop-down menu.
-`PgUp`  | | Go to the previous page of items. If there is no scrollbar, then this is the same as `Home`.
-`PgDn`  | | Go to the next page of items. If there is no scrollbar, then this is the same as `End`.
-`Up`    | | Highlight the previous item in the drop-down menu.
-`Down`  | | Highlight the next item in the drop-down menu.
-`A`-`Z`<br>`0`-`9`<br>`Space` | `Space` opens the drop-down menu. | Jump to the first item matching the key(s) pressed. Every time you press a key it will cycle through the matching items. **Hint:** if you type fast enough, it will try to find a match for everything you typed instead of just the first character.
+Key     | Description
+------- | -----------
+`Tab`   | Put focus on the next drop-down menu. If a menu is open, it will automatically close.
+`Shift`+`Tab` | Put focus on the previous drop-down menu. If a menu is open, it will automatically close.
+`Enter` | Open the drop-down menu that is in focus. If it is already open, then select the highlighted item.
+`Esc`   | Close the drop-down menu.
+`Home`  | Jump to the first item in the drop-down menu.
+`End`   | Jump to the last item in the drop-down menu.
+`PgUp`  | Go to the previous page of items. If there is no scrollbar, then this is the same as `Home`.
+`PgDn`  | Go to the next page of items. If there is no scrollbar, then this is the same as `End`.
+`Up`    | Highlight the previous item in the drop-down menu.
+`Down`  | Highlight the next item in the drop-down menu.
+`A`-`Z`<br>`0`-`9`<br>`Space` | If the drop-down menu is open, jump to the first item matching the key(s) pressed. Every time you press a key it will cycle through the matching items. **Hint:** if you type fast enough, it will try to find a match for everything you typed instead of just the first character. If the menu is closed and in focus, `Space` opens the menu (same as `Enter`).
 
 ## Installation
 
