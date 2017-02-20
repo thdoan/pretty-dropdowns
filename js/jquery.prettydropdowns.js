@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v3.3.3 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v3.4.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
