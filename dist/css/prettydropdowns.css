@@ -30,7 +30,7 @@
   visibility: hidden;
   white-space: nowrap;
 }
-.prettydropdown > ul:hover {
+.prettydropdown > ul:focus, .prettydropdown > ul:hover {
   border-color: #7f7f7f;
 }
 .prettydropdown > ul.active {
