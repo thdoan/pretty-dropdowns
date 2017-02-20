@@ -30,7 +30,7 @@
   visibility: hidden;
   white-space: nowrap;
 }
-.prettydropdown:hover > ul {
+.prettydropdown > ul:hover {
   border-color: #7f7f7f;
 }
 .prettydropdown > ul.active {
@@ -110,7 +110,7 @@
 .prettydropdown.arrow.triangle > ul > li.selected:after {
   content: none;
 }
-.prettydropdown:hover > ul > li.selected:before {
+.prettydropdown > ul:hover > li.selected:before {
   border-top-color: #7f7f7f;
 }
 .prettydropdown > ul.active > li.selected:before {
