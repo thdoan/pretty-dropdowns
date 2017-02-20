@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v3.3.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v3.3.3 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -23,12 +23,7 @@
       nLastIndex,
       nTimer,
       handleKeypress = function(e) {
-        var $dropdown = $('.prettydropdown > ul.active, .prettydropdown > ul:focus'),
-          $items = $dropdown.children(),
-          isOpen = $dropdown.hasClass('active'),
-          nItemsHeight = $dropdown.height()/(oOptions.height-2),
-          nItemsPerPage = nItemsHeight%1<0.5 ? Math.floor(nItemsHeight) : Math.ceil(nItemsHeight),
-          sKey;
+        var $dropdown = $('.prettydropdown > ul.active, .prettydropdown > ul:focus');
         if (!$dropdown.length) return;
         if (e.which===9) { // Tab
           resetDropdown($dropdown[0]);
@@ -38,20 +33,25 @@
           e.preventDefault();
           e.stopPropagation();
         }
+        var $items = $dropdown.children(),
+          bOpen = $dropdown.hasClass('active'),
+          nItemsHeight = $dropdown.height()/(oOptions.height-2),
+          nItemsPerPage = nItemsHeight%1<0.5 ? Math.floor(nItemsHeight) : Math.ceil(nItemsHeight),
+          sKey;
         nHoverIndex = Math.max(0, $dropdown.children('li.hover').index());
         nLastIndex = $items.length-1;
         $current = $items.eq(nHoverIndex);
         $dropdown.data('lastKeypress', +new Date());
         switch (e.which) {
           case 13: // Enter
-            if (!isOpen) toggleHover($current, 1);
+            if (!bOpen) toggleHover($current, 1);
             $current.click();
-            return;
+            break;
           case 27: // Esc
-            resetDropdown($dropdown[0]);
-            return;
+            if (bOpen) resetDropdown($dropdown[0]);
+            break;
           case 32: // Space
-            if (isOpen) {
+            if (bOpen) {
               sKey = ' ';
             } else {
               toggleHover($current, 1);
@@ -59,35 +59,47 @@
             }
             break;
           case 33: // Page Up
-            toggleHover($current, 0);
-            toggleHover($items.eq(Math.max(nHoverIndex-nItemsPerPage-1, 0)), 1);
-            return;
+            if (bOpen) {
+              toggleHover($current, 0);
+              toggleHover($items.eq(Math.max(nHoverIndex-nItemsPerPage-1, 0)), 1);
+            }
+            break;
           case 34: // Page Down
-            toggleHover($current, 0);
-            toggleHover($items.eq(Math.min(nHoverIndex+nItemsPerPage-1, nLastIndex)), 1);
-            return;
+            if (bOpen) {
+              toggleHover($current, 0);
+              toggleHover($items.eq(Math.min(nHoverIndex+nItemsPerPage-1, nLastIndex)), 1);
+            }
+            break;
           case 35: // End
-            toggleHover($current, 0);
-            toggleHover($items.eq(nLastIndex), 1);
-            return;
+            if (bOpen) {
+              toggleHover($current, 0);
+              toggleHover($items.eq(nLastIndex), 1);
+            }
+            break;
           case 36: // Home
-            toggleHover($current, 0);
-            toggleHover($items.eq(0), 1);
-            return;
+            if (bOpen) {
+              toggleHover($current, 0);
+              toggleHover($items.eq(0), 1);
+            }
+            break;
           case 38: // Up
-            toggleHover($current, 0);
-            // If not already key-navigated or first item is selected, cycle to
-            // the last item; else select the previous item
-            toggleHover(nHoverIndex ? $items.eq(nHoverIndex-1) : $items.eq(nLastIndex), 1);
-            return;
+            if (bOpen) {
+              toggleHover($current, 0);
+              // If not already key-navigated or first item is selected, cycle to
+              // the last item; or else select the previous item
+              toggleHover(nHoverIndex ? $items.eq(nHoverIndex-1) : $items.eq(nLastIndex), 1);
+            }
+            break;
           case 40: // Down
-            toggleHover($current, 0);
-            // If last item is selected, cycle to the first item;
-            // else select the next item
-            toggleHover(nHoverIndex===nLastIndex ? $items.eq(0) : $items.eq(nHoverIndex+1), 1);
-            return;
+            if (bOpen) {
+              toggleHover($current, 0);
+              // If last item is selected, cycle to the first item; or else select
+              // the next item
+              toggleHover(nHoverIndex===nLastIndex ? $items.eq(0) : $items.eq(nHoverIndex+1), 1);
+            }
+            break;
           default:
-            sKey = aKeys[e.which-48];
+            if (bOpen) sKey = aKeys[e.which-48];
         }
         if (sKey) { // Alphanumeric key pressed
           clearTimeout(nTimer);
@@ -185,8 +197,8 @@
         sHtml = '<ul' + ($select.attr('title')?' title="'+$select.attr('title')+'"':'')
           + ' tabindex="0" role="listbox" aria-activedescendant="item' + nTimestamp
           + '-1" aria-expanded="false" style="max-height:' + (oOptions.height-2) + 'px;margin:'
-          // NOTE: $select.css('margin') returns empty string in Firefox.
-          // See https://github.com/jquery/jquery/issues/3383
+          // NOTE: $select.css('margin') returns empty string in Firefox. See
+          // https://github.com/jquery/jquery/issues/3383
           + $select.css('margin-top') + ' '
           + $select.css('margin-right') + ' '
           + $select.css('margin-bottom') + ' '
@@ -195,8 +207,8 @@
           return '<li id="item' + nTimestamp + '-' + nCount
             + '" data-value="' + el.value + '"'
             + (el.title ? ' title="' + el.title + '"' : '')
-            + (sClass ? ' class="' + sClass + '"' : '')
             + ' role="option"'
+            + (sClass ? ' class="' + sClass + '"' : '')
             + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
             + 'px;line-height:' + (oOptions.height-2) + 'px"' : '')
             + '>' + el.text + '</li>';
@@ -238,6 +250,8 @@
         $dropdown.toggleClass('active');
         // Try to keep drop-down menu within viewport
         if ($dropdown.hasClass('active')) {
+          // Ensure the selected item is in view
+          $dropdown.scrollTop(0);
           // Close any other open menus
           if ($('.prettydropdown > ul.active').length>1) {
             resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
