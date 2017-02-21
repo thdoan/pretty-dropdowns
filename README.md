@@ -5,7 +5,9 @@ Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>`
 ### Features:
 
 - Two arrow styles and sizes to choose from (or add your own style)
-- Full keyboard navigation support (you can even go directly to a menu item by typing its text)
+- Support for multiple-select lists (`<select multiple>`)
+- Tooltips (`title`) carried over at both `<select>` and `<option>` levels
+- Full keyboard navigation (you can even go directly to a menu item by typing its text)
 - Accessible (it plays nicely with screen readers)
 - Sensible (when you open the menu it does its best to keep the menu items within the viewport)
 
