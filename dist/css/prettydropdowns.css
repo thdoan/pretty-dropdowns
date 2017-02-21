@@ -123,3 +123,15 @@
   background: none;
   border-top-color: #1e90ff;
 }
+.prettydropdown > ul > li.multiple {
+  border-bottom: 1px solid #eee;
+  overflow: hidden;
+  padding-right: 2rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.prettydropdown > ul > li > span {
+  float: right;
+  font-weight: bold;
+  margin-right: 0.8rem;
+}
