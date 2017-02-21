@@ -259,6 +259,7 @@
               $items.eq(0).text(aSelected.join(oOptions.selectedDelimiter));
               $dropdown.attr('title', ($select[0].title ? $select[0].title + '\n' : '') + 'Selected: ' + $items.eq(0).text());
             } else {
+              $items.eq(0).empty();
               $dropdown.attr('title', $select[0].title);
             }
           } else {
