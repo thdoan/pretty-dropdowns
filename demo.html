@@ -24,6 +24,9 @@ select {
   height: 50px;
   padding: 0 1rem;
 }
+.pretty, .pretty-alt {
+  visibility: hidden; /* Prevent FOUC */
+}
 .pretty-alt option {
   color: goldrod;
 }
@@ -48,7 +51,7 @@ select {
   </select>
   <br><br>
   <label>With tooltips:</label><br>
-  <select name="sort" title="Sort by" class="pretty">
+  <select name="sort" class="pretty">
     <option value="position" title="Sort by Most Popular">Most Popular</option>
     <option value="name" title="Sort by Name">Name</option>
     <option value="price_desc" title="Sort by Lowest Price First">Price (High to Low)</option>
@@ -63,6 +66,13 @@ select {
     <option value="3">&#9733;&#9733;&#9733;</option>
     <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
     <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+  </select>
+  <br><br>
+  <label>Multiple selection:</label><br>
+  <select name="colors" title="Colors" class="pretty" multiple>
+    <option value="red">Red</option>
+    <option value="green">Green</option>
+    <option value="blue">Blue</option>
   </select>
 </form>
 

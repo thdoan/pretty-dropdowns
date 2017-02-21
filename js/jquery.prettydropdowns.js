@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v3.4.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.0.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -12,7 +12,9 @@
     oOptions = $.extend({
       customClass: 'arrow',
       height: 50,
-      hoverIntent: 200
+      hoverIntent: 200,
+      selectedDelimiter: '; ',
+      selectedMarker: '&#10003;'
     }, oOptions);
     var $current,
       aKeys = [
@@ -133,7 +135,7 @@
       },
       hoverDropdownItem = function(e) {
         var $dropdown = $(e.currentTarget);
-        if ($dropdown[0]===e.target || !$dropdown.hasClass('active') || new Date()-$dropdown.data('lastKeypress')<200) return;
+        if (e.target.nodeName!=='LI' || !$dropdown.hasClass('active') || new Date()-$dropdown.data('lastKeypress')<200) return;
         toggleHover($dropdown.children(), 0, 1);
         toggleHover($(e.target), 1, 1);
       },
@@ -152,15 +154,6 @@
           $dropdown.children().removeClass('hover nohover');
           $dropdown.removeData('clicked').attr('aria-expanded', 'false');
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
-      },
-      selectDropdownItem = function($li) {
-        var $dropdown = $li.parent(),
-          $select = $dropdown.parent().find('select');
-        $dropdown.children('li.selected').removeClass('selected');
-        $dropdown.prepend($li.addClass('selected')).removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
-        // Sync <select> element
-        $select.children('option[value="' + $li.data('value') +'"]').prop('selected', true);
-        $select.trigger('change');
       },
       toggleHover = function($li, bOn, bNoScroll) {
         if (bOn) {
@@ -189,12 +182,13 @@
     return this.each(function() {
       var $select = $(this);
       if ($select.data('loaded')) return true; // Continue
-      $select.outerHeight(oOptions.height);
-      var nCount = 0,
+      $select.css('visibility', 'hidden').outerHeight(oOptions.height);
+      var bMultiple = $select.prop('multiple'),
+        nCount = 0,
         nTimestamp = +new Date(),
         nWidth = $select.outerWidth(),
         // Height - 2px for borders
-        sHtml = '<ul' + ($select.attr('title')?' title="'+$select.attr('title')+'"':'')
+        sHtml = '<ul' + (this.title ? ' title="' + this.title + '"' : '')
           + ' tabindex="0" role="listbox" aria-activedescendant="item' + nTimestamp
           + '-1" aria-expanded="false" style="max-height:' + (oOptions.height-2) + 'px;margin:'
           // NOTE: $select.css('margin') returns empty string in Firefox. See
@@ -204,26 +198,30 @@
           + $select.css('margin-bottom') + ' '
           + $select.css('margin-left') + ';">',
         renderItem = function(el, sClass) {
-          return '<li id="item' + nTimestamp + '-' + nCount
-            + '" data-value="' + el.value + '"'
-            + (el.title ? ' title="' + el.title + '"' : '')
+          ++nCount;
+          return '<li id="item' + nTimestamp + '-' + nCount + '"'
+            + (el ? ' data-value="' + el.value + '"' : '')
+            + (el && el.title ? ' title="' + el.title + '"' : '')
             + ' role="option"'
             + (sClass ? ' class="' + sClass + '"' : '')
             + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
             + 'px;line-height:' + (oOptions.height-2) + 'px"' : '')
-            + '>' + el.text + '</li>';
+            + '>' + (el ? el.text : '') + '</li>';
         };
-      $select.children('option:selected').each(function() {
-        ++nCount;
-        sHtml += renderItem(this, 'selected');
-      });
+      if (bMultiple) {
+        sHtml += renderItem(null, 'selected multiple');
+      } else {
+        $select.children('option:selected').each(function() {
+          sHtml += renderItem(this, 'selected');
+        });
+      }
       $select.children('option:not(:selected)').each(function() {
-        ++nCount;
         sHtml += renderItem(this);
       });
       sHtml += '</ul>';
-      $select.css('visibility', 'hidden').wrap('<div class="prettydropdown ' + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
+      $select.wrap('<div class="prettydropdown ' + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
       var $dropdown = $select.parent().children('ul'),
+        $items = $dropdown.children(),
         nWidth = $dropdown.outerWidth(true),
         nOuterWidth;
       // Calculate width if initially hidden
@@ -242,12 +240,36 @@
       // NOTE: Setting width using width(), then css() because width() only can
       // return a float, which can result in a missing right border when there
       // is a scrollbar.
-      $dropdown.children().width(nWidth).css('width', $dropdown.children().css('width')).click(function() {
+      $items.width(nWidth).css('width', $items.css('width')).click(function() {
+        var $li = $(this);
         // Only update if different value selected
         if ($dropdown.hasClass('active') && $(this).data('value')!==$dropdown.children('li.selected').data('value')) {
-          selectDropdownItem($(this));
+          // Select highlighted item
+          if ($select.prop('multiple')) {
+            if ($li.data('selected')) $li.children('span').remove();
+            else $li.append(' <span aria-hidden="true">' + oOptions.selectedMarker + '</span>');
+            $li.data('selected', !$li.data('selected'));
+            // Update first item with comma-separated list of selected values
+            var aSelected = [];
+            $items.each(function(nIndex) {
+              if (nIndex===0) return true; // Skip first item
+              if ($(this).data('selected')) aSelected.push($select.children().eq(nIndex-1).text());
+            });
+            if (aSelected.length) {
+              $items.eq(0).text(aSelected.join(oOptions.selectedDelimiter));
+              $dropdown.attr('title', ($select[0].title ? $select[0].title + '\n' : '') + 'Selected: ' + $items.eq(0).text());
+            } else {
+              $dropdown.attr('title', $select[0].title);
+            }
+          } else {
+            $dropdown.children('li.selected').removeClass('selected');
+            $dropdown.prepend($li.addClass('selected')).removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
+            // Sync <select> element
+            $select.children('option[value="' + $li.data('value') +'"]').prop('selected', true);
+            $select.trigger('change');
+          }
         }
-        $dropdown.toggleClass('active');
+        if ($li.index()===0 || !bMultiple || !$dropdown.hasClass('active')) $dropdown.toggleClass('active');
         // Try to keep drop-down menu within viewport
         if ($dropdown.hasClass('active')) {
           // Ensure the selected item is in view

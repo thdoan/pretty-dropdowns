@@ -84,7 +84,7 @@
   position: absolute;
   top: 8px;
   bottom: 0;
-  right: 0.8rem;
+  right: 8px;
   height: 16px;
   border: 8px solid transparent; /* Arrow size */
   box-sizing: border-box;
@@ -122,4 +122,16 @@
 .prettydropdown > ul.active > li.selected:hover:after {
   background: none;
   border-top-color: #1e90ff;
+}
+.prettydropdown > ul > li.multiple {
+  overflow: hidden;
+  padding-right: 2rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.prettydropdown > ul > li > span {
+  clear: both;
+  float: right;
+  font-weight: bold;
+  margin-right: 0.8rem;
 }
