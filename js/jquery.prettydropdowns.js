@@ -254,6 +254,8 @@
             $items.each(function(nIndex) {
               if (nIndex===0) return true; // Skip first item
               if ($(this).data('selected')) aSelected.push($select.children().eq(nIndex-1).text());
+              // Sync <select> element
+              $select.children().eq(nIndex-1).prop('selected', $(this).data('selected'));
             });
             if (aSelected.length) {
               $items.eq(0).text(aSelected.join(oOptions.selectedDelimiter));
@@ -267,8 +269,8 @@
             $dropdown.prepend($li.addClass('selected')).removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
             // Sync <select> element
             $select.children('option[value="' + $li.data('value') +'"]').prop('selected', true);
-            $select.trigger('change');
           }
+          $select.trigger('change');
         }
         if ($li.index()===0 || !bMultiple || !$dropdown.hasClass('active')) $dropdown.toggleClass('active');
         // Try to keep drop-down menu within viewport
