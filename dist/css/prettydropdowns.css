@@ -84,7 +84,7 @@
   position: absolute;
   top: 8px;
   bottom: 0;
-  right: 0.8rem;
+  right: 8px;
   height: 16px;
   border: 8px solid transparent; /* Arrow size */
   box-sizing: border-box;
