@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.0.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.1.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -180,17 +180,29 @@
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
     return this.each(function() {
-      var $select = $(this);
+      var $select = $(this),
+        nTimestamp = +new Date(),
+        sLabelId;
       if ($select.data('loaded')) return true; // Continue
       $select.css('visibility', 'hidden').outerHeight(oOptions.height);
+      // Test whether to add 'aria-labelledby'
+      if (this.id) {
+        // Look for <label>
+        var $label = $('label[for=' + this.id + ']');
+        if ($label.length) {
+          // Add 'id' to <label> if necessary
+          if ($label[0].id) sLabelId = $label[0].id;
+          else $label.attr('id', (sLabelId = 'menu' + nTimestamp));
+        }
+      }
       var bMultiple = $select.prop('multiple'),
         nCount = 0,
-        nTimestamp = +new Date(),
         nWidth = $select.outerWidth(),
         // Height - 2px for borders
         sHtml = '<ul' + (this.title ? ' title="' + this.title + '"' : '')
           + ' tabindex="0" role="listbox" aria-activedescendant="item' + nTimestamp
-          + '-1" aria-expanded="false" style="max-height:' + (oOptions.height-2) + 'px;margin:'
+          + '-1" aria-expanded="false"' + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
+          + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
           // NOTE: $select.css('margin') returns empty string in Firefox. See
           // https://github.com/jquery/jquery/issues/3383
           + $select.css('margin-top') + ' '
@@ -317,6 +329,10 @@
         },
         mouseleave: resetDropdown,
         mousemove:  hoverDropdownItem
+      });
+      // Put focus on menu when user clicks on label
+      if (sLabelId) $('#' + sLabelId).click(function() {
+        $dropdown.focus();
       });
       // Done with everything!
       $dropdown.parent().width(nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
