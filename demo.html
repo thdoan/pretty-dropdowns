@@ -37,8 +37,8 @@ select {
 <p>Try navigating with the keyboard also. You can go directly to an option by typing its text.</p>
 
 <form>
-  <label>With event handler:</label><br>
-  <select name="qty" class="pretty" onchange="alert('You selected ' + value)">
+  <label for="size">With event handler:</label><br>
+  <select id="size" name="size" class="pretty" onchange="alert('You selected ' + value)">
     <option value="32">32</option>
     <option value="33">33</option>
     <option value="34">34</option>
@@ -50,8 +50,8 @@ select {
     <option value="40">40</option>
   </select>
   <br><br>
-  <label>With tooltips:</label><br>
-  <select name="sort" class="pretty">
+  <label for="sort">With tooltips:</label><br>
+  <select id="sort" name="sort" class="pretty">
     <option value="position" title="Sort by Most Popular">Most Popular</option>
     <option value="name" title="Sort by Name">Name</option>
     <option value="price_desc" title="Sort by Lowest Price First">Price (High to Low)</option>
@@ -59,8 +59,8 @@ select {
     <option value="date" title="Sort by Newest First">Newest</option>
   </select>
   <br><br>
-  <label>Alternative style:</label><br>
-  <select name="rating" class="pretty-alt">
+  <label for="rating">Alternative style:</label><br>
+  <select id="rating" name="rating" class="pretty-alt">
     <option value="1">&#9733;</option>
     <option value="2">&#9733;&#9733;</option>
     <option value="3">&#9733;&#9733;&#9733;</option>
@@ -68,8 +68,8 @@ select {
     <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
   </select>
   <br><br>
-  <label>Multiple selection:</label><br>
-  <select name="colors" title="Colors" class="pretty" multiple>
+  <label for="colors">Multiple selection:</label><br>
+  <select id="colors" name="colors" title="Colors" class="pretty" multiple>
     <option value="red">Red</option>
     <option value="green">Green</option>
     <option value="blue">Blue</option>
