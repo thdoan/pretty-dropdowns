@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.1.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.1.1 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -150,9 +150,8 @@
         nTimer = setTimeout(function() {
           if ($dropdown.data('hover')) return;
           if ($dropdown.hasClass('reverse')) $dropdown.prepend($dropdown.children('li:last-child'));
-          $dropdown.removeClass('active reverse').css('height', '');
+          $dropdown.removeClass('active reverse').removeData('clicked').attr('aria-expanded', 'false').css('height', '');
           $dropdown.children().removeClass('hover nohover');
-          $dropdown.removeData('clicked').attr('aria-expanded', 'false');
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
       },
       toggleHover = function($li, bOn, bNoScroll) {
@@ -284,7 +283,10 @@
           }
           $select.trigger('change');
         }
-        if ($li.index()===0 || !bMultiple || !$dropdown.hasClass('active')) $dropdown.toggleClass('active');
+        if ($li.index()===0 || !bMultiple || !$dropdown.hasClass('active')) {
+          $dropdown.toggleClass('active');
+          $dropdown.attr('aria-expanded', $dropdown.hasClass('active'));
+        }
         // Try to keep drop-down menu within viewport
         if ($dropdown.hasClass('active')) {
           // Ensure the selected item is in view
@@ -310,7 +312,6 @@
               $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
             }
           }
-          $dropdown.attr('aria-expanded', 'true');
         } else {
           $dropdown.data('clicked', true);
           resetDropdown($dropdown[0]);
