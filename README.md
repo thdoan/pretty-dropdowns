@@ -76,6 +76,11 @@ Key     | Description
 `Down`  | Highlight the next item in the drop-down menu.
 `A`-`Z`<br>`0`-`9`<br>`Space` | If the drop-down menu is open, jump to the first item matching the key(s) pressed. Every time you press a key it will cycle through the matching items. **Hint:** if you type fast enough, it will try to find a match for everything you typed instead of just the first character. If the menu is closed and in focus, `Space` opens the menu (same as `Enter`).
 
+## Known Issues
+
+- After resizing the window, the drop-down menu near the bottom of the page sometimes doesn't open in reverse.
+- The multi-select container height is larger by one pixel.
+
 ## Installation
 
 Choose from one of the following methods:
