@@ -63,6 +63,9 @@
   display: block;
   padding-right: 0.8rem;
 }
+.prettydropdown > ul.changing > li {
+  color: transparent;
+}
 .prettydropdown > ul > li:first-child, .prettydropdown > ul.active > li {
   display: block;
 }
@@ -123,7 +126,7 @@
   background: none;
   border-top-color: #1e90ff;
 }
-.prettydropdown > ul > li.multiple {
+.prettydropdown.multiple > ul > li.selected {
   overflow: hidden;
   padding-right: 2rem;
   text-overflow: ellipsis;
