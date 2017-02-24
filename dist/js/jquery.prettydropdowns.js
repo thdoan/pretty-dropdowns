@@ -148,7 +148,7 @@
         return '<li id="item' + nTimestamp + '-' + nCount + '"'
           + (el ? ' data-value="' + el.value + '"' : '')
           + (el && el.title ? ' title="' + el.title + '"' : '')
-          + ' role="option"'
+          + (el ? ' role="option"' : '')
           + (sClass ? ' class="' + sClass + '"' : '')
           + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
           + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>'
