@@ -213,6 +213,7 @@
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
     return this.each(function() {
       var $select = $(this),
+        sId = this.name || this.id || '',
         sLabelId;
       if ($select.data('loaded')) return true; // Continue
       $select.css('visibility', 'hidden').outerHeight(oOptions.height);
@@ -260,7 +261,9 @@
         });
       }
       sHtml += '</ul>';
-      $select.wrap('<div class="prettydropdown ' + (bMultiple ? 'multiple ' : '') + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
+      $select.wrap('<div ' + (sId ? 'id="prettydropdown-' + sId + '" ' : '')
+        + 'class="prettydropdown ' + (bMultiple ? 'multiple ' : '')
+        + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
       var $dropdown = $select.parent().children('ul'),
         $items = $dropdown.children(),
         nWidth = $dropdown.outerWidth(true),
