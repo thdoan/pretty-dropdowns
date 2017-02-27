@@ -12,7 +12,7 @@
 body {
   font-family: sans-serif;
   font-size: 16px;
-  margin: 2em;
+  margin: 2rem;
   text-align: center;
 }
 label {
@@ -27,71 +27,210 @@ select {
 .pretty, .pretty-alt {
   visibility: hidden; /* Prevent FOUC */
 }
-.pretty-alt option {
-  color: goldrod;
+
+/* View Source overlay */
+.overlay {
+  position: fixed;
+  visibility: hidden; /* Prevent FOUC */
+  z-index: 1;
+}
+#overlay-dialog {
+  top: 50%;
+  left: 50%;
+  max-width: 80%;
+  max-height: 80%;
+  border: 8px solid #073642; /* Solarized $base02 */
+  border-radius: 5px;
+  box-sizing: border-box;
+  opacity: 0.9;
+  text-align: left;
+  transform: translate(-50%, -50%);
+}
+#overlay-dialog > button {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 36px;
+  background: #d9534f; /* BS4 .bg-danger */
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 1;
+  padding: 0;
+}
+#overlay-dialog > button:focus {
+  outline: none;
+}
+#overlay-dialog > button:hover > span {
+  opacity: 0.8;
+}
+#overlay-dialog > button:active > span {
+  opacity: 0.6;
+}
+#overlay-shadow {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.8;
+}
+
+/* Prettify overrides */
+pre.prettyprint {
+  width: 100% !important;
+  height: 100%;
+  background: #002b36 !important; /* Solarized $base03 */
+  border: none !important;
+  border-radius: 0 !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  overflow: auto;
+  white-space: pre !important;
 }
 </style>
+<!--
+NOTE: Generally, <script> can be placed immediately before the closing </body>
+tag, but it's placed here for the demo's "view source" functionality.
+-->
+<!--[if lt IE 9]>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<![endif]-->
+<!--[if IE 9]><!-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
 
 <p>Try navigating with the keyboard also. You can go directly to an option by typing its text.</p>
 
 <form>
-  <label for="size">With event handler:</label><br>
-  <select id="size" name="size" class="pretty" onchange="alert('You selected ' + value)">
-    <option value="32">32</option>
-    <option value="33">33</option>
-    <option value="34">34</option>
-    <option value="35">35</option>
-    <option value="36">36</option>
-    <option value="37">37</option>
-    <option value="38">38</option>
-    <option value="39">39</option>
-    <option value="40">40</option>
-  </select>
-  <br><br>
-  <label for="sort">With tooltips:</label><br>
-  <select id="sort" name="sort" class="pretty">
-    <option value="position" title="Sort by Most Popular">Most Popular</option>
-    <option value="name" title="Sort by Name" selected>Name</option>
-    <option value="price_desc" title="Sort by Lowest Price First">Price (High to Low)</option>
-    <option value="price" title="Sort by Highest Price First">Price (Low to High)</option>
-    <option value="date" title="Sort by Newest First">Newest</option>
-  </select>
-  <br><br>
-  <label for="rating">Alternative style:</label><br>
-  <select id="rating" name="rating" class="pretty-alt">
-    <option value="1">&#9733;</option>
-    <option value="2">&#9733;&#9733;</option>
-    <option value="3">&#9733;&#9733;&#9733;</option>
-    <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
-    <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
-  </select>
-  <br><br>
-  <label for="colors">Multiple selection:</label><br>
-  <select id="colors" name="colors" title="Colors" class="pretty" multiple>
-    <option value="red" selected>Red</option>
-    <option value="green">Green</option>
-    <option value="blue" selected>Blue</option>
-  </select>
+  <section>
+    <label for="size">With event handler:</label><br>
+    <select id="size" name="size" class="pretty" onchange="alert('You selected ' + value)">
+      <option value="32">32</option>
+      <option value="33">33</option>
+      <option value="34">34</option>
+      <option value="35">35</option>
+      <option value="36">36</option>
+      <option value="37">37</option>
+      <option value="38">38</option>
+      <option value="39">39</option>
+      <option value="40">40</option>
+    </select>
+    <script>
+    $(function() {
+      // Initiate Pretty Dropdowns
+      $('.pretty').prettyDropdown();
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
+  <section>
+    <label for="sort">With tooltips:</label><br>
+    <select id="sort" name="sort" class="pretty">
+      <option value="position" title="Sort by Most Popular">Most Popular</option>
+      <option value="name" title="Sort by Name" selected>Name</option>
+      <option value="price_desc" title="Sort by Lowest Price First">Price (High to Low)</option>
+      <option value="price" title="Sort by Highest Price First">Price (Low to High)</option>
+      <option value="date" title="Sort by Newest First">Newest</option>
+    </select>
+    <script>
+    $(function() {
+      // Initiate Pretty Dropdowns
+      $('.pretty').prettyDropdown();
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
+  <section>
+    <label for="rating">Alternative style:</label><br>
+    <select id="rating" name="rating" class="pretty-alt">
+      <option value="1">&#9733;</option>
+      <option value="2">&#9733;&#9733;</option>
+      <option value="3">&#9733;&#9733;&#9733;</option>
+      <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+      <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+    </select>
+    <script>
+    $(function() {
+      // Initiate Pretty Dropdowns
+      $('.pretty-alt').prettyDropdown({
+        customClass: 'arrow triangle small',
+        height: 30
+      });
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
+  <section>
+    <label for="colors">Multiple selection:</label><br>
+    <select id="colors" name="colors" title="Colors" class="pretty" multiple>
+      <option value="red" selected>Red</option>
+      <option value="green">Green</option>
+      <option value="blue" selected>Blue</option>
+    </select>
+    <script>
+    $(function() {
+      // Initiate Pretty Dropdowns
+      $('.pretty').prettyDropdown();
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
 </form>
 
-<!--[if lt IE 9]>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<![endif]-->
-<!--[if IE 9]><!-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/google/code-prettify/e9fae9a0/src/run_prettify.js?autorun=false&skin=sunburst"></script>
 <!--<![endif]-->
 <script src="js/jquery.prettydropdowns.js"></script>
 <script>
-$(document).ready(function() {
-  // Initiate Pretty Dropdowns
-  $('.pretty').prettyDropdown();
-  $('.pretty-alt').prettyDropdown({
-    customClass: 'arrow triangle small',
-    height: 30
+function closeOverlay(e) {
+  if (e.which===27) $('#overlay-dialog > button').click();
+}
+
+// @param Event or String (id)
+function viewSource(e) {
+  var $this, $dialog, $overlay, $shadow;
+  if (typeof e==='string') $this = $('#' + e);
+  else if (e && e.target) $this = $(this).closest('p').prev('section');
+  $('body').append(
+    '<div id="overlay-shadow" class="overlay"></div>' +
+    '<div id="overlay-dialog" class="overlay">' +
+    '  <button type="button" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+    '  <pre class="prettyprint">' + $this.data('origCode') + '</pre>' +
+    '</div>'
+  );
+  PR.prettyPrint(); // Syntax highlighting
+  $dialog = $('#overlay-dialog');
+  $shadow = $('#overlay-shadow');
+  $overlay = $dialog.add($shadow);
+  // Set heights
+  $dialog.height($('pre', $dialog).outerHeight());
+  // Show when everything's ready
+  $overlay.css('visibility', 'visible');
+  // Hook up event handlers to close overlay
+  $('button', $dialog).add($shadow).one('click', function() {
+    $overlay.remove();
+    $(window).off('keydown', closeOverlay);
   });
+  $(window).on('keydown', closeOverlay);
+}
+
+// Save original code for "view source"
+$('form > section').each(function() {
+  $(this).data('origCode', $.trim($(this).html()).replace(/[<>]/g, function(sMatch) {
+    return {
+      '<': '&lt;',
+      '>': '&gt;'
+    }[sMatch];
+  }).replace(/\n    /g, '\n'));
 });
+
+// Hook up "view source" event handler
+$('small > a').click(viewSource);
 </script>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
