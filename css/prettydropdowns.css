@@ -64,7 +64,7 @@
   padding-right: 0.8rem;
 }
 .prettydropdown > ul:not(.active) > li.nohover:first-child {
-  color: transparent;
+  color: transparent; /* Prevent FOUC */
 }
 .prettydropdown > ul > li:first-child, .prettydropdown > ul.active > li {
   display: block;
