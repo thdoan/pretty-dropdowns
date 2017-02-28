@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.3.1 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.3.2 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -160,8 +160,10 @@
         var $dropdown = $(o.currentTarget||o);
         // NOTE: Sometimes it's possible for $dropdown to point to the wrong
         // element when you quickly hover over another menu. To prevent this, we
-        // need to check for .active as a backup.
-        if (o.type==='mouseleave' && !$dropdown.hasClass('active')) $dropdown = $('.prettydropdown > ul.active');
+        // need to check for .active as a backup and manually reassign $dropdown.
+        // This also requires that it's not clicked on because in rare cases the
+        // reassignment fails and the reverse menu will not get reset.
+        if (o.type==='mouseleave' && !$dropdown.hasClass('active') && !$dropdown.data('clicked')) $dropdown = $('.prettydropdown > ul.active');
         $dropdown.data('hover', false);
         clearTimeout(nTimer);
         nTimer = setTimeout(function() {
@@ -200,7 +202,7 @@
             if (this.selected) return this.text;
           }).get().join(oOptions.selectedDelimiter);
         if (sSelected) {
-          var sTitle = ($select[0].title ? $select[0].title + '\n' : '') + 'Selected: ' + sSelected;
+          var sTitle = ($select.attr('title') ? $select.attr('title') + '\n' : '') + 'Selected: ' + sSelected;
           $dropdown.children('.selected').text(sSelected);
           $dropdown.attr({
             'title': sTitle,
@@ -209,8 +211,8 @@
         } else {
           $dropdown.children('.selected').empty();
           $dropdown.attr({
-            'title': $select[0].title,
-            'aria-label': $select[0].title
+            'title': $select.attr('title'),
+            'aria-label': $select.attr('title')
           });
         }
       };
@@ -231,7 +233,7 @@
         var $label = $('label[for=' + this.id + ']');
         if ($label.length) {
           // Add 'id' to <label> if necessary
-          if ($label[0].id) sLabelId = $label[0].id;
+          if ($label.attr('id')) sLabelId = $label.attr('id');
           else $label.attr('id', (sLabelId = 'menu' + nTimestamp));
         }
       }
@@ -325,9 +327,7 @@
           // Ensure the selected item is in view
           $dropdown.scrollTop(0);
           // Close any other open menus
-          if ($('.prettydropdown > ul.active').length>1) {
-            resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
-          }
+          if ($('.prettydropdown > ul.active').length>1) resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
           var nWinHeight = window.innerHeight,
             nOffsetTop = $dropdown.offset().top,
             nScrollTop = document.body.scrollTop,
