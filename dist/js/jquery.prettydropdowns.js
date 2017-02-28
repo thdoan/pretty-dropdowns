@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.3.2 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.4.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -144,12 +144,14 @@
       },
       // Construct menu item
       renderItem = function(el, sClass, bSelected) {
+        sClass  = sClass || '';
+        if (el && el.disabled) sClass += ' disabled';
         ++nCount;
         return '<li id="item' + nTimestamp + '-' + nCount + '"'
           + (el ? ' data-value="' + el.value + '"' : '')
           + (el ? ' role="option"' : '')
           + (el && el.title ? ' title="' + el.title + '" aria-label="' + el.title + '"' : '')
-          + (sClass ? ' class="' + sClass + '"' : '')
+          + (sClass ? ' class="' + $.trim(sClass) + '"' : '')
           + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
           + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>'
           + (el ? el.text : '')
@@ -241,7 +243,7 @@
       var bMultiple = $select.prop('multiple'),
         nWidth = $select.outerWidth(),
         // Height - 2px for borders
-        sHtml = '<ul tabindex="0" role="listbox"'
+        sHtml = '<ul' + (this.disabled ? '' : ' tabindex="0"') + ' role="listbox"'
           + (this.title ? ' title="' + this.title + '" aria-label="' + this.title + '"' : '')
           + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
           + ' aria-activedescendant="item' + nTimestamp + '-1" aria-expanded="false"'
@@ -272,7 +274,7 @@
       }
       sHtml += '</ul>';
       $select.wrap('<div ' + (sId ? 'id="prettydropdown-' + sId + '" ' : '')
-        + 'class="prettydropdown ' + (bMultiple ? 'multiple ' : '')
+        + 'class="prettydropdown ' + (this.disabled ? 'disabled ' : '') + (bMultiple ? 'multiple ' : '')
         + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
       var $dropdown = $select.parent().children('ul'),
         $items = $dropdown.children(),
@@ -298,6 +300,8 @@
       // is a scrollbar.
       $items.width(nWidth).css('width', $items.css('width')).click(function() {
         var $li = $(this);
+        // Ignore disabled menu or menu item
+        if ($dropdown.parent().hasClass('disabled') || $li.hasClass('disabled')) return;
         // Only update if different value selected
         if ($dropdown.hasClass('active') && $(this).data('value')!==$dropdown.children('.selected').data('value')) {
           // Select highlighted item
