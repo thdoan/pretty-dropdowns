@@ -267,7 +267,7 @@ $('form > section').each(function() {
       '<': '&lt;',
       '>': '&gt;'
     }[sMatch];
-  }).replace(/\n    /g, '\n'));
+  }).replace(/\n    /g, '\n').replace(/=""/g, ''));
 });
 
 // Hook up "view source" event handler
