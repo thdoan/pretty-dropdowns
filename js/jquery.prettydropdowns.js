@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.3.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.3.1 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -167,7 +167,7 @@
         nTimer = setTimeout(function() {
           if ($dropdown.data('hover')) return;
           if ($dropdown.hasClass('reverse')) $dropdown.prepend($dropdown.children(':last-child'));
-          $dropdown.removeClass('active changing reverse').removeData('clicked').attr('aria-expanded', 'false').css('height', '');
+          $dropdown.removeClass('active reverse').removeData('clicked').attr('aria-expanded', 'false').css('height', '');
           $dropdown.children().removeClass('hover nohover');
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
       },
@@ -346,7 +346,6 @@
             }
           }
         } else {
-          if ($dropdown.hasClass('reverse')) $dropdown.addClass('changing'); // Prevent FOUC in reverse menu
           $dropdown.data('clicked', true);
           resetDropdown($dropdown[0]);
         }
