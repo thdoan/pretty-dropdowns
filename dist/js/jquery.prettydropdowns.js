@@ -200,7 +200,7 @@
             if (this.selected) return this.text;
           }).get().join(oOptions.selectedDelimiter);
         if (sSelected) {
-          var sTitle = ($select[0].title ? $select[0].title + '\n' : '') + 'Selected: ' + sSelected;
+          var sTitle = ($select.attr('title') ? $select.attr('title') + '\n' : '') + 'Selected: ' + sSelected;
           $dropdown.children('.selected').text(sSelected);
           $dropdown.attr({
             'title': sTitle,
@@ -209,8 +209,8 @@
         } else {
           $dropdown.children('.selected').empty();
           $dropdown.attr({
-            'title': $select[0].title,
-            'aria-label': $select[0].title
+            'title': $select.attr('title'),
+            'aria-label': $select.attr('title')
           });
         }
       };
@@ -231,7 +231,7 @@
         var $label = $('label[for=' + this.id + ']');
         if ($label.length) {
           // Add 'id' to <label> if necessary
-          if ($label[0].id) sLabelId = $label[0].id;
+          if ($label.attr('id')) sLabelId = $label.attr('id');
           else $label.attr('id', (sLabelId = 'menu' + nTimestamp));
         }
       }
