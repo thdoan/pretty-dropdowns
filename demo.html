@@ -206,6 +206,21 @@ repeatedly here for the "view source" functionality.
     </script>
   </section>
   <p><small>[<a href="javascript:;">view source</a>]</small></p>
+  <section>
+    <label for="lego">Disabled options:</label><br>
+    <select id="lego" name="lego" class="pretty">
+      <option value="21103">LEGO&reg; 21103 The DeLorean Time Machine</option>
+      <option value="21303">LEGO&reg; 21303 WALL&bull;E</option>
+      <option value="76023" title="Out of Stock" disabled>LEGO&reg; 76023 The Tumbler</option>
+    </select>
+    <script>
+    $(function() {
+      // Initiate Pretty Dropdowns
+      $('.pretty').prettyDropdown();
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
 </form>
 <hr>
 <p><a href="/pretty-dropdowns/" title="Go back to the main page" role="button"><span aria-hidden="true">&laquo;</span> Back</a></p>
