@@ -15,6 +15,26 @@ body {
   margin: 2rem;
   text-align: center;
 }
+a[role=button] {
+  background: #a9a9a9;
+  color: #fff;
+  font-weight: bold;
+  padding: 1rem 3rem;
+  text-decoration: none;
+}
+a[role=button]:hover {
+  background: #7f7f7f;
+}
+a[role=button]:active {
+  box-shadow: 0 0 3px #666;
+}
+hr {
+  max-width: 640px;
+  height: 1px;
+  background: #a9a9a9;
+  border: none;
+  margin: 2rem auto;
+}
 label {
   display: inline-block;
   font-weight: bold;
@@ -186,6 +206,8 @@ repeatedly here for the "view source" functionality.
   </section>
   <p><small>[<a href="javascript:;">view source</a>]</small></p>
 </form>
+<hr>
+<p><a href="/pretty-dropdowns/" title="Go back to the main page" role="button"><span aria-hidden="true">&laquo;</span> Back</a></p>
 
 <script src="https://cdn.rawgit.com/google/code-prettify/e9fae9a0/src/run_prettify.js?autorun=false&skin=sunburst"></script>
 <script src="js/jquery.prettydropdowns.js"></script>
