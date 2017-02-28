@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.1.1 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.3.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -147,8 +147,8 @@
         ++nCount;
         return '<li id="item' + nTimestamp + '-' + nCount + '"'
           + (el ? ' data-value="' + el.value + '"' : '')
-          + (el && el.title ? ' title="' + el.title + '"' : '')
           + (el ? ' role="option"' : '')
+          + (el && el.title ? ' title="' + el.title + '" aria-label="' + el.title + '"' : '')
           + (sClass ? ' class="' + sClass + '"' : '')
           + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
           + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>'
@@ -200,11 +200,18 @@
             if (this.selected) return this.text;
           }).get().join(oOptions.selectedDelimiter);
         if (sSelected) {
+          var sTitle = ($select[0].title ? $select[0].title + '\n' : '') + 'Selected: ' + sSelected;
           $dropdown.children('.selected').text(sSelected);
-          $dropdown.attr('title', ($select[0].title ? $select[0].title + '\n' : '') + 'Selected: ' + sSelected);
+          $dropdown.attr({
+            'title': sTitle,
+            'aria-label': sTitle
+          });
         } else {
           $dropdown.children('.selected').empty();
-          $dropdown.attr('title', $select[0].title);
+          $dropdown.attr({
+            'title': $select[0].title,
+            'aria-label': $select[0].title
+          });
         }
       };
     oOptions.selectedMarker = ' <span aria-hidden="true">' + oOptions.selectedMarker + '</span>';
@@ -232,9 +239,10 @@
       var bMultiple = $select.prop('multiple'),
         nWidth = $select.outerWidth(),
         // Height - 2px for borders
-        sHtml = '<ul' + (this.title ? ' title="' + this.title + '"' : '')
-          + ' tabindex="0" role="listbox" aria-activedescendant="item' + nTimestamp
-          + '-1" aria-expanded="false"' + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
+        sHtml = '<ul tabindex="0" role="listbox"'
+          + (this.title ? ' title="' + this.title + '" aria-label="' + this.title + '"' : '')
+          + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
+          + ' aria-activedescendant="item' + nTimestamp + '-1" aria-expanded="false"'
           + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
           // NOTE: $select.css('margin') returns an empty string in Firefox, so
           // we have to get each margin individually. See
