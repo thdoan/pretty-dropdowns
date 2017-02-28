@@ -95,13 +95,17 @@ pre.prettyprint {
 </style>
 <!--
 NOTE: Generally, <script> can be placed immediately before the closing </body>
-tag, but it's placed here for the demo's "view source" functionality.
+tag to prevent parser blocking, but it's placed here because inline jQuery is
+used for the demo's "view source" functionality. Also, you would normally
+execute $('.pretty').prettyDropdown() just once, but it's being executed
+repeatedly here for the "view source" functionality.
 -->
 <!--[if lt IE 9]>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <![endif]-->
 <!--[if IE 9]><!-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!--<![endif]-->
 </head>
 <body>
 
@@ -134,8 +138,8 @@ tag, but it's placed here for the demo's "view source" functionality.
     <select id="sort" name="sort" class="pretty">
       <option value="position" title="Sort by Most Popular">Most Popular</option>
       <option value="name" title="Sort by Name" selected>Name</option>
-      <option value="price_desc" title="Sort by Lowest Price First">Price (High to Low)</option>
-      <option value="price" title="Sort by Highest Price First">Price (Low to High)</option>
+      <option value="price_desc" title="Sort by Highest Price First">Price (High to Low)</option>
+      <option value="price" title="Sort by Lowest Price First">Price (Low to High)</option>
       <option value="date" title="Sort by Newest First">Newest</option>
     </select>
     <script>
@@ -184,7 +188,6 @@ tag, but it's placed here for the demo's "view source" functionality.
 </form>
 
 <script src="https://cdn.rawgit.com/google/code-prettify/e9fae9a0/src/run_prettify.js?autorun=false&skin=sunburst"></script>
-<!--<![endif]-->
 <script src="js/jquery.prettydropdowns.js"></script>
 <script>
 function closeOverlay(e) {
