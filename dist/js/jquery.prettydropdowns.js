@@ -160,8 +160,10 @@
         var $dropdown = $(o.currentTarget||o);
         // NOTE: Sometimes it's possible for $dropdown to point to the wrong
         // element when you quickly hover over another menu. To prevent this, we
-        // need to check for .active as a backup.
-        if (o.type==='mouseleave' && !$dropdown.hasClass('active')) $dropdown = $('.prettydropdown > ul.active');
+        // need to check for .active as a backup and manually reassign $dropdown.
+        // This also requires that it's not clicked on because in rare cases the
+        // reassignment fails and the reverse menu will not get reset.
+        if (o.type==='mouseleave' && !$dropdown.hasClass('active') && !$dropdown.data('clicked')) $dropdown = $('.prettydropdown > ul.active');
         $dropdown.data('hover', false);
         clearTimeout(nTimer);
         nTimer = setTimeout(function() {
@@ -325,9 +327,7 @@
           // Ensure the selected item is in view
           $dropdown.scrollTop(0);
           // Close any other open menus
-          if ($('.prettydropdown > ul.active').length>1) {
-            resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
-          }
+          if ($('.prettydropdown > ul.active').length>1) resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
           var nWinHeight = window.innerHeight,
             nOffsetTop = $dropdown.offset().top,
             nScrollTop = document.body.scrollTop,
