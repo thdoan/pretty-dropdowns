@@ -63,7 +63,7 @@
   display: block;
   padding-right: 0.8rem;
 }
-.prettydropdown > ul:not(.active) > li.nohover:first-child {
+.prettydropdown > ul:not(.active) > li:not(.selected):first-child {
   color: transparent; /* Prevent FOUC */
 }
 .prettydropdown > ul > li:first-child, .prettydropdown > ul.active > li {
