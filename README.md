@@ -76,10 +76,24 @@ Key     | Description
 `Down`  | Highlight the next item in the drop-down menu.
 `A`-`Z`<br>`0`-`9`<br>`Space` | If the drop-down menu is open, jump to the first item matching the key(s) pressed. Every time you press a key it will cycle through the matching items. **Hint:** if you type fast enough, it will try to find a match for everything you typed instead of just the first character. If the menu is closed and in focus, `Space` opens the menu (same as `Enter`).
 
+## Accessibility
+
+The following attributes are added to improve accessibility when using alternative input methods (e.g., keyboard, screen reader):
+
+- `role="listbox"` and `role="option"` (to tell screen readers that it's a drop-down menu widget)
+- `aria-activedescendant` (points to the currently selected menu item)
+- `aria-expanded` (this is `true` when the menu is open and `false` when it's closed)
+- `aria-label` (this is equivalent to the `title` attribute for screen readers)
+- `aria-labelledby` (points to the `<label>` element that is linked to the `<select>` if it exists)
+- `tabindex="0"` (to allow the widget to get focus)
+
+Please [submit an issue](https://github.com/thdoan/pretty-dropdowns/issues) if there are other ways to improve accessibility.
+
 ## Known Issues
 
 - After resizing the window, the drop-down menu near the bottom of the page sometimes doesn't open in reverse.
 - The multi-select container height is larger by one pixel.
+- The `title` value will be read twice in some screen reader clients (once for `title`, once for `aria-label`).
 
 ## Installation
 
