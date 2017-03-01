@@ -1,6 +1,6 @@
 # jQuery Pretty Dropdowns
 
-Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>` drop-down menus into "pretty" menus that you can style using CSS.
+Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>` drop-down menus into "pretty" menus that you can skin using CSS. If you need more advanced features, then I recommend [Selectize](http://selectize.github.io/selectize.js/). If you are working with Bootstrap, then I recommend [Bootstrap-select](https://silviomoreto.github.io/bootstrap-select/) or [my own fork](https://thdoan.github.io/bootstrap-select/).
 
 ### Features:
 
