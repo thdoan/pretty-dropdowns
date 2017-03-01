@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.4.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.5.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -143,18 +143,32 @@
         toggleHover($(e.target), 1, 1);
       },
       // Construct menu item
-      renderItem = function(el, sClass, bSelected) {
-        sClass  = sClass || '';
-        if (el && el.disabled) sClass += ' disabled';
+      renderItem = function(el, sClass, bSelected, bOptGroup) {
+        var sGroup = '',
+          sText;
+        sClass = sClass || '';
+        if (el) {
+          switch (el.nodeName) {
+            case 'OPTION':
+              if (el.parentNode.nodeName==='OPTGROUP') sGroup = el.parentNode.getAttribute('label');
+              sText = el.text;
+              break;
+            case 'OPTGROUP':
+              sClass += ' label';
+              sText = el.getAttribute('label');
+              break;
+          }
+          if (el.disabled) sClass += ' disabled';
+        }
         ++nCount;
         return '<li id="item' + nTimestamp + '-' + nCount + '"'
-          + (el ? ' data-value="' + el.value + '"' : '')
-          + (el ? ' role="option"' : '')
+          + (sGroup ? ' data-group="' + sGroup + '"' : '')
+          + (el && el.value ? ' data-value="' + el.value + '"' : '')
+          + (el && el.nodeName==='OPTION' ? ' role="option"' : '')
           + (el && el.title ? ' title="' + el.title + '" aria-label="' + el.title + '"' : '')
           + (sClass ? ' class="' + $.trim(sClass) + '"' : '')
           + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
-          + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>'
-          + (el ? el.text : '')
+          + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>' + sText
           + (bSelected ? oOptions.selectedMarker : '') + '</li>';
       },
       // Reset menu state
@@ -200,7 +214,7 @@
       // Update selected values for multi-select menu
       updateSelected = function($dropdown) {
         var $select = $dropdown.parent().children('select'),
-          sSelected = $select.children().map(function() {
+          sSelected = $('option', $select).map(function() {
             if (this.selected) return this.text;
           }).get().join(oOptions.selectedDelimiter);
         if (sSelected) {
@@ -240,7 +254,8 @@
         }
       }
       nCount = 0;
-      var bMultiple = $select.prop('multiple'),
+      var $items = $('optgroup, option', $select),
+        bMultiple = $select.prop('multiple'),
         nWidth = $select.outerWidth(),
         // Height - 2px for borders
         sHtml = '<ul' + (this.disabled ? '' : ' tabindex="0"') + ' role="listbox"'
@@ -257,7 +272,7 @@
           + $select.css('margin-left') + ';">';
       if (bMultiple) {
         sHtml += renderItem(null, 'selected');
-        $select.children().each(function() {
+        $items.each(function() {
           if (this.selected) {
             sHtml += renderItem(this, '', true)
           } else {
@@ -265,10 +280,10 @@
           }
         });
       } else {
-        $select.children(':selected').each(function() {
+        $items.filter(':selected').each(function() {
           sHtml += renderItem(this, 'selected');
         });
-        $select.children(':not(:selected)').each(function() {
+        $items.filter(':not(:selected)').each(function() {
           sHtml += renderItem(this);
         });
       }
@@ -277,9 +292,9 @@
         + 'class="prettydropdown ' + (this.disabled ? 'disabled ' : '') + (bMultiple ? 'multiple ' : '')
         + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
       var $dropdown = $select.parent().children('ul'),
-        $items = $dropdown.children(),
         nWidth = $dropdown.outerWidth(true),
         nOuterWidth;
+      $items = $dropdown.children();
       // Update default selected values for multi-select menu
       if (bMultiple) updateSelected($dropdown);
       // Calculate width if initially hidden
@@ -301,7 +316,7 @@
       $items.width(nWidth).css('width', $items.css('width')).click(function() {
         var $li = $(this);
         // Ignore disabled menu or menu item
-        if ($dropdown.parent().hasClass('disabled') || $li.hasClass('disabled')) return;
+        if ($dropdown.parent().hasClass('disabled') || $li.hasClass('disabled') || $li.hasClass('label')) return;
         // Only update if different value selected
         if ($dropdown.hasClass('active') && $(this).data('value')!==$dropdown.children('.selected').data('value')) {
           // Select highlighted item
@@ -310,15 +325,21 @@
             else $li.append(oOptions.selectedMarker);
             // Sync <select> element
             $dropdown.children(':not(.selected)').each(function(nIndex) {
-              $select.children().eq(nIndex).prop('selected', $(this).children('span').length>0);
+              $('optgroup, option', $select).eq(nIndex).prop('selected', $(this).children('span').length>0);
             });
             // Update selected values for multi-select menu
             updateSelected($dropdown);
           } else {
-            $dropdown.children('.selected').removeClass('selected');
+            var $selected = $dropdown.children('.selected');
+            $selected.removeClass('selected');
             $dropdown.prepend($li.addClass('selected')).removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
+            if ($selected.data('group')) $dropdown.children('.label').filter(function() {
+              return $(this).text()===$selected.data('group');
+            }).after($selected);
             // Sync <select> element
-            $select.children('[value="' + $li.data('value') +'"]').prop('selected', true);
+            $('optgroup, option', $select).filter(function() {
+              return (this.value===$li.data('value') || this.text===$li.text());
+            }).prop('selected', true);
           }
           $select.trigger('change');
         }

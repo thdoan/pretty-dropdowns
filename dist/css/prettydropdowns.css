@@ -126,11 +126,16 @@
   background: none;
   border-top-color: #1e90ff;
 }
+
+/* Multi-Select */
 .prettydropdown.multiple > ul > li.selected {
   overflow: hidden;
   padding-right: 2rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.prettydropdown.multiple > ul > li.selected + li, .prettydropdown.multiple > ul.reverse > li.selected {
+  border-top: 1px solid #dedede;
 }
 .prettydropdown > ul > li > span {
   clear: both;
@@ -138,6 +143,23 @@
   font-weight: bold;
   margin-right: 0.8rem;
 }
+
+/* Option Groups */
+.prettydropdown > ul > li.label {
+  cursor: default;
+  font-weight: bold;
+}
+.prettydropdown > ul > li.label, .prettydropdown > ul > li.label ~ li.selected {
+  border-top: 1px solid #dedede;
+}
+.prettydropdown > ul > li.label:first-child {
+  border-top: none;
+}
+.prettydropdown > ul > li.label ~ li:not(.label):not(.selected) {
+  padding-left: 1.6rem;
+}
+
+/* Disabled */
 .prettydropdown.disabled, .prettydropdown > ul > li.disabled {
   opacity: 0.3;
 }
