@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.7.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.7.2 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -41,7 +41,9 @@
         var $select = $(elSel),
           sId = elSel.name || elSel.id || '',
           sLabelId;
-        if ($select.data('loaded')) return true; // Continue
+        // Exit if widget has already been initiated
+        if ($select.data('loaded')) return;
+        // Set <select> height to reserve space for <div> container
         $select.css('visibility', 'hidden').outerHeight(oOptions.height);
         nTimestamp = +new Date();
         // Test whether to add 'aria-labelledby'
@@ -91,7 +93,12 @@
         sHtml += '</ul>';
         $select.wrap('<div ' + (sId ? 'id="prettydropdown-' + sId + '" ' : '')
           + 'class="prettydropdown ' + (elSel.disabled ? 'disabled ' : '') + (bMultiple ? 'multiple ' : '')
-          + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
+          + oOptions.customClass + ' loading"'
+          // NOTE: For some reason, the container height is larger by 1px if the
+          // <select> has the 'multiple' attribute or 'size' attribute with a
+          // value larger than 1. To fix this, we have to inline the height.
+          + ((bMultiple || elSel.size>1) ? ' style="height:' + oOptions.height + 'px;"' : '')
+          +'></div>').before(sHtml).data('loaded', true);
         var $dropdown = $select.parent().children('ul'),
           nWidth = $dropdown.outerWidth(true),
           nOuterWidth;
@@ -350,7 +357,7 @@
           + (sTitle ? ' title="' + sTitle + '" aria-label="' + sTitle + '"' : '')
           + (sClass ? ' class="' + $.trim(sClass) + '"' : '')
           + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
-          + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>' + sText
+          + 'px;line-height:' + (oOptions.height-4) + 'px;"' : '') + '>' + sText
           + (bSelected ? oOptions.selectedMarker : '') + '</li>';
       },
 
