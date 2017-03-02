@@ -1,13 +1,14 @@
 # jQuery Pretty Dropdowns
 
-Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>` drop-down menus into "pretty" menus that you can style using CSS.
+Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>` drop-down menus into "pretty" menus that you can skin using CSS.
 
 ### Features:
 
 - Two arrow styles and sizes to choose from (or add your own style)
+- Easily add icons, thumbnails, and other custom HTML to the menu items
 - Support for multiple-select lists (`<select multiple>`)
 - Support for option groups (`<optgroup>`)
-- Tooltips (`title`) carried over at both `<select>` and `<option>` levels
+- Tooltips (`title`) carried over at `<select>`, `<option>`, and `<optgroup>` levels
 - Full keyboard navigation (you can even go directly to a menu item by typing its text)
 - Auto-linked to `<label for>` (menu will get focus when you click on the label)
 - Accessible (it plays nicely with screen readers)
@@ -79,6 +80,10 @@ $(document).ready(function() {
 $dropdown.refresh();
 </script>
 ```
+
+## Data Attributes
+
+The `data-prefix` and `data-suffix` attributes can be added to the `<option>` elements to insert custom HTML before and after each menu item, respectively. You can make use of these attributes to add icons, thumbnails, badges, etc. to the menu items. A good example can be seen [in the demo](https://thdoan.github.io/pretty-dropdowns/demo.html#example-spell).
 
 ## Keyboard Navigation
 

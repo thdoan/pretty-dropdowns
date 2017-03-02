@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.6.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.7.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -19,7 +19,7 @@
       afterLoad: function(){}
     }, oOptions);
 
-    oOptions.selectedMarker = ' <span aria-hidden="true">' + oOptions.selectedMarker + '</span>';
+    oOptions.selectedMarker = ' <span aria-hidden="true" class="checked">' + oOptions.selectedMarker + '</span>';
     // Validate options
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
@@ -122,11 +122,11 @@
           if ($dropdown.hasClass('active') && $li.data('value')!==$dropdown.children('.selected').data('value')) {
             // Select highlighted item
             if (bMultiple) {
-              if ($li.children('span').length) $li.children('span').remove();
+              if ($li.children('span.checked').length) $li.children('span.checked').remove();
               else $li.append(oOptions.selectedMarker);
               // Sync <select> element
               $dropdown.children(':not(.selected)').each(function(nIndex) {
-                $('optgroup, option', $select).eq(nIndex).prop('selected', $(this).children('span').length>0);
+                $('optgroup, option', $select).eq(nIndex).prop('selected', $(this).children('span.checked').length>0);
               });
               // Update selected values for multi-select menu
               updateSelected($dropdown);
@@ -331,7 +331,7 @@
           switch (elOpt.nodeName) {
             case 'OPTION':
               if (elOpt.parentNode.nodeName==='OPTGROUP') sGroup = elOpt.parentNode.getAttribute('label');
-              sText = elOpt.text;
+              sText = (elOpt.getAttribute('data-prefix') || '') + elOpt.text + (elOpt.getAttribute('data-suffix') || '');
               break;
             case 'OPTGROUP':
               sClass += ' label';
