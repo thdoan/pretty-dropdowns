@@ -69,8 +69,13 @@ Name        | Description
 **Example:**
 
 ```
-var $dropdown = $('select').prettyDropdown();
+<script>
+$(document).ready(function() {
+  $dropdown = $('select').prettyDropdown();
+});
+// When <select> state changes...
 $dropdown.refresh();
+</script>
 ```
 
 ## Keyboard Navigation
