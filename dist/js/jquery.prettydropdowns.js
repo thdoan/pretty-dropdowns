@@ -15,7 +15,8 @@
       height: 50,
       hoverIntent: 200,
       selectedDelimiter: '; ',
-      selectedMarker: '&#10003;'
+      selectedMarker: '&#10003;',
+      afterLoad: function(){}
     }, oOptions);
 
     oOptions.selectedMarker = ' <span aria-hidden="true">' + oOptions.selectedMarker + '</span>';
@@ -193,6 +194,7 @@
         if (sLabelId) $('#' + sLabelId).off('click', handleFocus).click(handleFocus);
         // Done with everything!
         $dropdown.parent().width(nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
+        oOptions.afterLoad();
       },
 
       // Manage widget focusing
