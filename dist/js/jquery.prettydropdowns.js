@@ -35,7 +35,7 @@
       nTimer,
       nTimestamp,
 
-      // Initiate!
+      // Initiate pretty drop-downs
       init = function(elSel) {
         var $select = $(elSel),
           sId = elSel.name || elSel.id || '',
@@ -49,7 +49,7 @@
           var $label = $('label[for=' + elSel.id + ']');
           if ($label.length) {
             // Add 'id' to <label> if necessary
-            if ($label.attr('id')) sLabelId = $label.attr('id');
+            if ($label.attr('id') && !/^menu\d{13,}$/.test($label.attr('id'))) sLabelId = $label.attr('id');
             else $label.attr('id', (sLabelId = 'menu' + nTimestamp));
           }
         }
@@ -190,13 +190,14 @@
           mousemove:  hoverDropdownItem
         });
         // Put focus on menu when user clicks on label
-        if (sLabelId) $('#' + sLabelId).click(function() {
-          $dropdown.focus();
-        });
+        if (sLabelId) $('#' + sLabelId).off('click', handleFocus).click(handleFocus);
         // Done with everything!
         $dropdown.parent().width(nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
+      },
 
-
+      // Manage widget focusing
+      handleFocus = function(e) {
+        $('ul[aria-labelledby=' + e.target.id + ']').focus();
       },
 
       // Manage keyboard navigation
@@ -412,6 +413,20 @@
           });
         }
       };
+
+    /**
+     * Public Functions
+     */
+
+    // Resync the menu with <select> to reflect state changes
+    this.refresh = function(oOptions) {
+      return this.each(function() {
+        var $select = $(this);
+        $select.prevAll('ul').remove();
+        $select.unwrap().data('loaded', false);
+        init(this);
+      });
+    };
 
     return this.each(function() {
       init(this);
