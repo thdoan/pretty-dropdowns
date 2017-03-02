@@ -45,10 +45,6 @@ label {
   margin: 0.5rem 0;
 }
 select {
-  height: 50px;
-  padding: 0 1rem;
-}
-.pretty, .pretty-alt {
   visibility: hidden; /* Prevent FOUC */
 }
 
@@ -93,6 +89,7 @@ pre.prettyprint {
 
 /* Pretty Dropdowns overrides */
 body.show-selects select {
+  height: inherit !important;
   margin-top: 60px;
   visibility: visible !important;
 }
@@ -261,7 +258,7 @@ repeatedly here for the "view source" functionality.
   <p><small>[<a href="javascript:;">view source</a>]</small></p>
   <section>
     <label for="colors">Multiple selection:</label><br>
-    <select id="colors" name="colors" title="Colors" class="pretty" multiple>
+    <select id="colors" name="colors" size="3" title="Colors" class="pretty" multiple>
       <option value="red" selected>Red</option>
       <option value="green">Green</option>
       <option value="blue" selected>Blue</option>
