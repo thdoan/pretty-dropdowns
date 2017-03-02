@@ -15,18 +15,22 @@ body {
   margin: 2rem;
   text-align: center;
 }
-a[role=button] {
+a[role=button], button {
   background: #a9a9a9;
+  border: none;
   color: #fff;
+  cursor: pointer;
+  font-size: 16px;
   font-weight: bold;
   padding: 1rem 3rem;
   text-decoration: none;
 }
-a[role=button]:hover {
+a[role=button]:hover, button:hover {
   background: #7f7f7f;
 }
-a[role=button]:active {
+a[role=button]:active, button:active {
   box-shadow: 0 0 3px #666;
+  outline: none;;
 }
 hr {
   max-width: 640px;
@@ -88,6 +92,14 @@ pre.prettyprint {
 }
 
 /* Pretty Dropdowns overrides */
+body.show-selects select {
+  margin-top: 60px;
+  visibility: visible !important;
+}
+body.show-selects #rating {
+  margin-top: 40px;
+  visibility: visible !important;
+}
 .prettydropdown > ul > li > small {
   margin-left: 6px;
   opacity: 0.5;
@@ -164,6 +176,8 @@ repeatedly here for the "view source" functionality.
 <h1>jQuery Pretty Dropdowns Demo</h1>
 
 <p>Try navigating with the keyboard also. You can go directly to an option by typing its text.</p>
+<p><button id="toggle-selects" type="button" onclick="toggleSelects()">Show &lt;select&gt;</button></p>
+<hr>
 
 <form>
   <section>
@@ -298,6 +312,7 @@ repeatedly here for the "view source" functionality.
   </section>
   <p><small>[<a href="javascript:;">view source</a>]</small></p>
 </form>
+
 <hr>
 <p><a href="/pretty-dropdowns/" title="Go back to the main page" role="button"><span aria-hidden="true">&laquo;</span> Back</a></p>
 
@@ -306,6 +321,11 @@ repeatedly here for the "view source" functionality.
 <script>
 function closeOverlay(e) {
   if (e.which===27) $('#overlay-dialog > button').click();
+}
+
+function toggleSelects() {
+  $('body').toggleClass('show-selects');
+  $('#toggle-selects').html(($('body').hasClass('show-selects') ? 'Hide' : 'Show') + ' &lt;select&gt;');
 }
 
 // @param Event or String (id)
