@@ -48,6 +48,51 @@ select {
   visibility: hidden; /* Prevent FOUC */
 }
 
+/* Glyphicon Halflings (BS3) */
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot');
+  src: url('http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+       url('http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2') format('woff2'),
+       url('http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff') format('woff'),
+       url('http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+       url('http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font: normal normal 16px/1 'Glyphicons Halflings';
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  margin-right: 4px;
+}
+.glyphicon-fire:before {
+  content: '\e104';
+}
+.glyphicon-eye-open:before {
+  content: '\e105';
+}
+
+/* Prettify overrides */
+pre.prettyprint {
+  width: 100% !important;
+  height: 100%;
+  background: #002b36 !important; /* Solarized $base03 */
+  border: none !important;
+  border-radius: 0 !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  overflow: auto;
+  white-space: pre !important;
+}
+
+/* Pretty Dropdowns overrides */
+.prettydropdown > ul > li > small {
+  margin-left: 6px;
+  opacity: 0.5;
+}
+
 /* View Source overlay */
 .overlay {
   position: fixed;
@@ -99,19 +144,6 @@ select {
   height: 100%;
   background: #000;
   opacity: 0.8;
-}
-
-/* Prettify overrides */
-pre.prettyprint {
-  width: 100% !important;
-  height: 100%;
-  background: #002b36 !important; /* Solarized $base03 */
-  border: none !important;
-  border-radius: 0 !important;
-  box-sizing: border-box;
-  margin: 0 !important;
-  overflow: auto;
-  white-space: pre !important;
 }
 </style>
 <!--
@@ -171,6 +203,27 @@ repeatedly here for the "view source" functionality.
     </script>
   </section>
   <p><small>[<a href="javascript:;">view source</a>]</small></p>
+  <a id="example-spell"></a>
+  <section>
+    <label for="spell">With prefix/suffix:</label><br>
+    <select id="spell" name="spell" title="Select your spell">
+      <option data-prefix="<span aria-hidden='true' class='glyphicon glyphicon-eye-open'></span>"
+              data-suffix="<small>petrification</small>" value="eom">Eye of Medusa</option>
+      <option data-prefix="<span aria-hidden='true' class='glyphicon glyphicon-fire'></span>"
+              data-suffix="<small>area damage</small>" value="rof">Rain of Fire</option>
+    </select>
+    <script>
+    $(document).ready(function() {
+      // Initiate Pretty Dropdowns
+      $('#spell').prettyDropdown({
+        afterLoad: function() {
+          console.log('Spells are ready!');
+        }
+      });
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
   <section>
     <label for="rating">Alternative style:</label><br>
     <select id="rating" name="rating" class="pretty-alt">
@@ -207,21 +260,6 @@ repeatedly here for the "view source" functionality.
   </section>
   <p><small>[<a href="javascript:;">view source</a>]</small></p>
   <section>
-    <label for="lego">Disabled options:</label><br>
-    <select id="lego" name="lego" class="pretty">
-      <option value="21103">LEGO&reg; 21103 The DeLorean Time Machine</option>
-      <option value="21303">LEGO&reg; 21303 WALL&bull;E</option>
-      <option value="76023" title="Out of Stock" disabled>LEGO&reg; 76023 The Tumbler</option>
-    </select>
-    <script>
-    $(document).ready(function() {
-      // Initiate Pretty Dropdowns
-      $('.pretty').prettyDropdown();
-    });
-    </script>
-  </section>
-  <p><small>[<a href="javascript:;">view source</a>]</small></p>
-  <section>
     <label for="games">Option groups:</label><br>
     <select id="games" name="games" title="What do you want to play?" class="pretty">
       <optgroup label="Arcade">
@@ -234,6 +272,21 @@ repeatedly here for the "view source" functionality.
         <option>Candy Crush Saga</option>
         <option>Clash of Clans</option>
       </optgroup>
+    </select>
+    <script>
+    $(document).ready(function() {
+      // Initiate Pretty Dropdowns
+      $('.pretty').prettyDropdown();
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
+  <section>
+    <label for="lego">Disabled options:</label><br>
+    <select id="lego" name="lego" class="pretty">
+      <option value="21103">LEGO&reg; 21103 The DeLorean Time Machine</option>
+      <option value="21303">LEGO&reg; 21303 WALL&bull;E</option>
+      <option value="76023" title="Out of Stock" disabled>LEGO&reg; 76023 The Tumbler</option>
     </select>
     <script>
     $(document).ready(function() {

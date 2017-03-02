@@ -137,7 +137,7 @@
 .prettydropdown.multiple > ul > li.selected + li, .prettydropdown.multiple > ul.reverse > li.selected {
   border-top: 1px solid #dedede;
 }
-.prettydropdown > ul > li > span {
+.prettydropdown > ul > li > span.checked {
   clear: both;
   float: right;
   font-weight: bold;
