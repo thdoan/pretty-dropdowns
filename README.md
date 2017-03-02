@@ -60,6 +60,19 @@ Name                | Type   | Default      | Description
 `selectedDelimiter` | string | ;            | The separator character to use for the list of selected values in a multi-select menu.
 `selectedMarker`    | string | **&#10003;** | The icon or symbol to mark that an item is selected in a multi-select menu. HTML is accepted (e.g., `<i class="fa fa-check"></i>`).
 
+## Methods
+
+Name        | Description
+------------| -----------
+`refresh()` | Rebuild the drop-down menu. You should do this whenever the `<select>` state changes (e.g., one or more `<option>` gets added, removed, or disabled).
+
+**Example:**
+
+```
+var $dropdown = $('select').prettyDropdown();
+$dropdown.refresh();
+```
+
 ## Keyboard Navigation
 
 Key     | Description
