@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.4.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.6.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -8,14 +8,23 @@
 
 (function($) {
   $.fn.prettyDropdown = function(oOptions) {
+
     // Default options
     oOptions = $.extend({
       customClass: 'arrow',
       height: 50,
       hoverIntent: 200,
       selectedDelimiter: '; ',
-      selectedMarker: '&#10003;'
+      selectedMarker: '&#10003;',
+      afterLoad: function(){}
     }, oOptions);
+
+    oOptions.selectedMarker = ' <span aria-hidden="true">' + oOptions.selectedMarker + '</span>';
+    // Validate options
+    if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
+    if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
+
+    // Globals
     var $current,
       aKeys = [
         '0','1','2','3','4','5','6','7','8','9',,,,,,,,
@@ -26,6 +35,174 @@
       nLastIndex,
       nTimer,
       nTimestamp,
+
+      // Initiate pretty drop-downs
+      init = function(elSel) {
+        var $select = $(elSel),
+          sId = elSel.name || elSel.id || '',
+          sLabelId;
+        if ($select.data('loaded')) return true; // Continue
+        $select.css('visibility', 'hidden').outerHeight(oOptions.height);
+        nTimestamp = +new Date();
+        // Test whether to add 'aria-labelledby'
+        if (elSel.id) {
+          // Look for <label>
+          var $label = $('label[for=' + elSel.id + ']');
+          if ($label.length) {
+            // Add 'id' to <label> if necessary
+            if ($label.attr('id') && !/^menu\d{13,}$/.test($label.attr('id'))) sLabelId = $label.attr('id');
+            else $label.attr('id', (sLabelId = 'menu' + nTimestamp));
+          }
+        }
+        nCount = 0;
+        var $items = $('optgroup, option', $select),
+          bMultiple = elSel.multiple,
+          nWidth = $select.outerWidth(),
+          // Height - 2px for borders
+          sHtml = '<ul' + (elSel.disabled ? '' : ' tabindex="0"') + ' role="listbox"'
+            + (elSel.title ? ' title="' + elSel.title + '" aria-label="' + elSel.title + '"' : '')
+            + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
+            + ' aria-activedescendant="item' + nTimestamp + '-1" aria-expanded="false"'
+            + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
+            // NOTE: $select.css('margin') returns an empty string in Firefox, so
+            // we have to get each margin individually. See
+            // https://github.com/jquery/jquery/issues/3383
+            + $select.css('margin-top') + ' '
+            + $select.css('margin-right') + ' '
+            + $select.css('margin-bottom') + ' '
+            + $select.css('margin-left') + ';">';
+        if (bMultiple) {
+          sHtml += renderItem(null, 'selected');
+          $items.each(function() {
+            if (this.selected) {
+              sHtml += renderItem(this, '', true)
+            } else {
+              sHtml += renderItem(this);
+            }
+          });
+        } else {
+          $items.filter(':selected').each(function() {
+            sHtml += renderItem(this, 'selected');
+          });
+          $items.filter(':not(:selected)').each(function() {
+            sHtml += renderItem(this);
+          });
+        }
+        sHtml += '</ul>';
+        $select.wrap('<div ' + (sId ? 'id="prettydropdown-' + sId + '" ' : '')
+          + 'class="prettydropdown ' + (elSel.disabled ? 'disabled ' : '') + (bMultiple ? 'multiple ' : '')
+          + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
+        var $dropdown = $select.parent().children('ul'),
+          nWidth = $dropdown.outerWidth(true),
+          nOuterWidth;
+        $items = $dropdown.children();
+        // Update default selected values for multi-select menu
+        if (bMultiple) updateSelected($dropdown);
+        // Calculate width if initially hidden
+        if ($dropdown.width()<=0) {
+          var $clone = $dropdown.parent().clone().css({
+              position: 'absolute',
+              top: '-100%'
+            });
+          $('body').append($clone);
+          nWidth = $clone.children('ul').outerWidth(true);
+          $('li', $clone).width(nWidth);
+          nOuterWidth = $clone.children('ul').outerWidth(true);
+          $clone.remove();
+        }
+        // Set dropdown width and event handler
+        // NOTE: Setting width using width(), then css() because width() only can
+        // return a float, which can result in a missing right border when there
+        // is a scrollbar.
+        $items.width(nWidth).css('width', $items.css('width')).click(function() {
+          var $li = $(this);
+          // Ignore disabled menu or menu item
+          if ($dropdown.parent().hasClass('disabled') || $li.hasClass('disabled') || $li.hasClass('label')) return;
+          // Only update if different value selected
+          if ($dropdown.hasClass('active') && $li.data('value')!==$dropdown.children('.selected').data('value')) {
+            // Select highlighted item
+            if (bMultiple) {
+              if ($li.children('span').length) $li.children('span').remove();
+              else $li.append(oOptions.selectedMarker);
+              // Sync <select> element
+              $dropdown.children(':not(.selected)').each(function(nIndex) {
+                $('optgroup, option', $select).eq(nIndex).prop('selected', $(this).children('span').length>0);
+              });
+              // Update selected values for multi-select menu
+              updateSelected($dropdown);
+            } else {
+              var $selected = $dropdown.children('.selected');
+              $selected.removeClass('selected');
+              $dropdown.prepend($li.addClass('selected')).removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
+              if ($selected.data('group')) $dropdown.children('.label').filter(function() {
+                return $(this).text()===$selected.data('group');
+              }).after($selected);
+              // Sync <select> element
+              $('optgroup, option', $select).filter(function() {
+                return (this.value===$li.data('value') || this.text===$li.text());
+              }).prop('selected', true);
+            }
+            $select.trigger('change');
+          }
+          if ($li.hasClass('selected') || !bMultiple || !$dropdown.hasClass('active')) {
+            $dropdown.toggleClass('active');
+            $dropdown.attr('aria-expanded', $dropdown.hasClass('active'));
+          }
+          // Try to keep drop-down menu within viewport
+          if ($dropdown.hasClass('active')) {
+            // Ensure the selected item is in view
+            $dropdown.scrollTop(0);
+            // Close any other open menus
+            if ($('.prettydropdown > ul.active').length>1) resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
+            var nWinHeight = window.innerHeight,
+              nOffsetTop = $dropdown.offset().top,
+              nScrollTop = document.body.scrollTop,
+              nDropdownHeight = $dropdown.outerHeight(),
+              nDropdownBottom = nOffsetTop-nScrollTop+nDropdownHeight;
+            if (nDropdownBottom>nWinHeight) {
+              // Expand to direction that has the most space
+              if (nOffsetTop-nScrollTop>nWinHeight-(nOffsetTop-nScrollTop+oOptions.height)) {
+                $dropdown.addClass('reverse').append($dropdown.children('.selected'));
+                if (nOffsetTop-nScrollTop+oOptions.height<nDropdownHeight) {
+                  $dropdown.outerHeight(nOffsetTop-nScrollTop+oOptions.height);
+                  $dropdown.scrollTop(nDropdownHeight);
+                }
+              } else {
+                $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
+              }
+            }
+          } else {
+            $dropdown.data('clicked', true);
+            resetDropdown($dropdown[0]);
+          }
+        });
+        $dropdown.on({
+          focusin: function() {
+            // Unregister any existing handlers first to prevent duplicate firings
+            $(window).off('keydown', handleKeypress).on('keydown', handleKeypress);
+          },
+          focusout: function() {
+            $(window).off('keydown', handleKeypress);
+          },
+          mouseenter: function() {
+            $dropdown.data('hover', true);
+          },
+          mouseleave: resetDropdown,
+          mousemove:  hoverDropdownItem
+        });
+        // Put focus on menu when user clicks on label
+        if (sLabelId) $('#' + sLabelId).off('click', handleFocus).click(handleFocus);
+        // Done with everything!
+        $dropdown.parent().width(nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
+        oOptions.afterLoad();
+      },
+
+      // Manage widget focusing
+      handleFocus = function(e) {
+        $('ul[aria-labelledby=' + e.target.id + ']').focus();
+      },
+
+      // Manage keyboard navigation
       handleKeypress = function(e) {
         var $dropdown = $('.prettydropdown > ul.active, .prettydropdown > ul:focus');
         if (!$dropdown.length) return;
@@ -135,6 +312,7 @@
           }
         }
       },
+
       // Highlight menu item
       hoverDropdownItem = function(e) {
         var $dropdown = $(e.currentTarget);
@@ -142,22 +320,42 @@
         toggleHover($dropdown.children(), 0, 1);
         toggleHover($(e.target), 1, 1);
       },
+
       // Construct menu item
-      renderItem = function(el, sClass, bSelected) {
-        sClass  = sClass || '';
-        if (el && el.disabled) sClass += ' disabled';
+      renderItem = function(elOpt, sClass, bSelected) {
+        var sGroup = '',
+          sText,
+          sTitle;
+        sClass = sClass || '';
+        if (elOpt) {
+          switch (elOpt.nodeName) {
+            case 'OPTION':
+              if (elOpt.parentNode.nodeName==='OPTGROUP') sGroup = elOpt.parentNode.getAttribute('label');
+              sText = elOpt.text;
+              break;
+            case 'OPTGROUP':
+              sClass += ' label';
+              sText = elOpt.getAttribute('label');
+              break;
+          }
+          if (elOpt.disabled || (sGroup && elOpt.parentNode.disabled)) sClass += ' disabled';
+          sTitle = elOpt.title;
+          if (sGroup && !sTitle) sTitle = elOpt.parentNode.title;
+        }
         ++nCount;
         return '<li id="item' + nTimestamp + '-' + nCount + '"'
-          + (el ? ' data-value="' + el.value + '"' : '')
-          + (el ? ' role="option"' : '')
-          + (el && el.title ? ' title="' + el.title + '" aria-label="' + el.title + '"' : '')
+          + (sGroup ? ' data-group="' + sGroup + '"' : '')
+          + (elOpt && elOpt.value ? ' data-value="' + elOpt.value + '"' : '')
+          + (elOpt && elOpt.nodeName==='OPTION' ? ' role="option"' : '')
+          + (sTitle ? ' title="' + sTitle + '" aria-label="' + sTitle + '"' : '')
           + (sClass ? ' class="' + $.trim(sClass) + '"' : '')
           + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
-          + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>'
-          + (el ? el.text : '')
+          + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>' + sText
           + (bSelected ? oOptions.selectedMarker : '') + '</li>';
       },
+
       // Reset menu state
+      // @param o Event or Element object
       resetDropdown = function(o) {
         var $dropdown = $(o.currentTarget||o);
         // NOTE: Sometimes it's possible for $dropdown to point to the wrong
@@ -175,6 +373,7 @@
           $dropdown.children().removeClass('hover nohover');
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
       },
+
       // Set menu item hover state
       toggleHover = function($li, bOn, bNoScroll) {
         if (bOn) {
@@ -197,10 +396,11 @@
           $li.removeClass('hover').addClass('nohover');
         }
       },
+
       // Update selected values for multi-select menu
       updateSelected = function($dropdown) {
         var $select = $dropdown.parent().children('select'),
-          sSelected = $select.children().map(function() {
+          sSelected = $('option', $select).map(function() {
             if (this.selected) return this.text;
           }).get().join(oOptions.selectedDelimiter);
         if (sSelected) {
@@ -218,162 +418,24 @@
           });
         }
       };
-    oOptions.selectedMarker = ' <span aria-hidden="true">' + oOptions.selectedMarker + '</span>';
-    // Validate options
-    if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
-    if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
+
+    /**
+     * Public Functions
+     */
+
+    // Resync the menu with <select> to reflect state changes
+    this.refresh = function(oOptions) {
+      return this.each(function() {
+        var $select = $(this);
+        $select.prevAll('ul').remove();
+        $select.unwrap().data('loaded', false);
+        init(this);
+      });
+    };
+
     return this.each(function() {
-      var $select = $(this),
-        sId = this.name || this.id || '',
-        sLabelId;
-      if ($select.data('loaded')) return true; // Continue
-      $select.css('visibility', 'hidden').outerHeight(oOptions.height);
-      nTimestamp = +new Date();
-      // Test whether to add 'aria-labelledby'
-      if (this.id) {
-        // Look for <label>
-        var $label = $('label[for=' + this.id + ']');
-        if ($label.length) {
-          // Add 'id' to <label> if necessary
-          if ($label.attr('id')) sLabelId = $label.attr('id');
-          else $label.attr('id', (sLabelId = 'menu' + nTimestamp));
-        }
-      }
-      nCount = 0;
-      var bMultiple = $select.prop('multiple'),
-        nWidth = $select.outerWidth(),
-        // Height - 2px for borders
-        sHtml = '<ul' + (this.disabled ? '' : ' tabindex="0"') + ' role="listbox"'
-          + (this.title ? ' title="' + this.title + '" aria-label="' + this.title + '"' : '')
-          + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
-          + ' aria-activedescendant="item' + nTimestamp + '-1" aria-expanded="false"'
-          + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
-          // NOTE: $select.css('margin') returns an empty string in Firefox, so
-          // we have to get each margin individually. See
-          // https://github.com/jquery/jquery/issues/3383
-          + $select.css('margin-top') + ' '
-          + $select.css('margin-right') + ' '
-          + $select.css('margin-bottom') + ' '
-          + $select.css('margin-left') + ';">';
-      if (bMultiple) {
-        sHtml += renderItem(null, 'selected');
-        $select.children().each(function() {
-          if (this.selected) {
-            sHtml += renderItem(this, '', true)
-          } else {
-            sHtml += renderItem(this);
-          }
-        });
-      } else {
-        $select.children(':selected').each(function() {
-          sHtml += renderItem(this, 'selected');
-        });
-        $select.children(':not(:selected)').each(function() {
-          sHtml += renderItem(this);
-        });
-      }
-      sHtml += '</ul>';
-      $select.wrap('<div ' + (sId ? 'id="prettydropdown-' + sId + '" ' : '')
-        + 'class="prettydropdown ' + (this.disabled ? 'disabled ' : '') + (bMultiple ? 'multiple ' : '')
-        + oOptions.customClass + ' loading"></div>').before(sHtml).data('loaded', true);
-      var $dropdown = $select.parent().children('ul'),
-        $items = $dropdown.children(),
-        nWidth = $dropdown.outerWidth(true),
-        nOuterWidth;
-      // Update default selected values for multi-select menu
-      if (bMultiple) updateSelected($dropdown);
-      // Calculate width if initially hidden
-      if ($dropdown.width()<=0) {
-        var $clone = $dropdown.parent().clone().css({
-            position: 'absolute',
-            top: '-100%'
-          });
-        $('body').append($clone);
-        nWidth = $clone.children('ul').outerWidth(true);
-        $('li', $clone).width(nWidth);
-        nOuterWidth = $clone.children('ul').outerWidth(true);
-        $clone.remove();
-      }
-      // Set dropdown width and event handler
-      // NOTE: Setting width using width(), then css() because width() only can
-      // return a float, which can result in a missing right border when there
-      // is a scrollbar.
-      $items.width(nWidth).css('width', $items.css('width')).click(function() {
-        var $li = $(this);
-        // Ignore disabled menu or menu item
-        if ($dropdown.parent().hasClass('disabled') || $li.hasClass('disabled')) return;
-        // Only update if different value selected
-        if ($dropdown.hasClass('active') && $(this).data('value')!==$dropdown.children('.selected').data('value')) {
-          // Select highlighted item
-          if ($select.prop('multiple')) {
-            if ($li.children('span').length) $li.children('span').remove();
-            else $li.append(oOptions.selectedMarker);
-            // Sync <select> element
-            $dropdown.children(':not(.selected)').each(function(nIndex) {
-              $select.children().eq(nIndex).prop('selected', $(this).children('span').length>0);
-            });
-            // Update selected values for multi-select menu
-            updateSelected($dropdown);
-          } else {
-            $dropdown.children('.selected').removeClass('selected');
-            $dropdown.prepend($li.addClass('selected')).removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
-            // Sync <select> element
-            $select.children('[value="' + $li.data('value') +'"]').prop('selected', true);
-          }
-          $select.trigger('change');
-        }
-        if ($li.hasClass('selected') || !bMultiple || !$dropdown.hasClass('active')) {
-          $dropdown.toggleClass('active');
-          $dropdown.attr('aria-expanded', $dropdown.hasClass('active'));
-        }
-        // Try to keep drop-down menu within viewport
-        if ($dropdown.hasClass('active')) {
-          // Ensure the selected item is in view
-          $dropdown.scrollTop(0);
-          // Close any other open menus
-          if ($('.prettydropdown > ul.active').length>1) resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
-          var nWinHeight = window.innerHeight,
-            nOffsetTop = $dropdown.offset().top,
-            nScrollTop = document.body.scrollTop,
-            nDropdownHeight = $dropdown.outerHeight(),
-            nDropdownBottom = nOffsetTop-nScrollTop+nDropdownHeight;
-          if (nDropdownBottom>nWinHeight) {
-            // Expand to direction that has the most space
-            if (nOffsetTop-nScrollTop>nWinHeight-(nOffsetTop-nScrollTop+oOptions.height)) {
-              $dropdown.addClass('reverse').append($dropdown.children('.selected'));
-              if (nOffsetTop-nScrollTop+oOptions.height<nDropdownHeight) {
-                $dropdown.outerHeight(nOffsetTop-nScrollTop+oOptions.height);
-                $dropdown.scrollTop(nDropdownHeight);
-              }
-            } else {
-              $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
-            }
-          }
-        } else {
-          $dropdown.data('clicked', true);
-          resetDropdown($dropdown[0]);
-        }
-      });
-      $dropdown.on({
-        focusin: function() {
-          // Unregister any existing handlers first to prevent duplicate firings
-          $(window).off('keydown', handleKeypress).on('keydown', handleKeypress);
-        },
-        focusout: function() {
-          $(window).off('keydown', handleKeypress);
-        },
-        mouseenter: function() {
-          $dropdown.data('hover', true);
-        },
-        mouseleave: resetDropdown,
-        mousemove:  hoverDropdownItem
-      });
-      // Put focus on menu when user clicks on label
-      if (sLabelId) $('#' + sLabelId).click(function() {
-        $dropdown.focus();
-      });
-      // Done with everything!
-      $dropdown.parent().width(nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
+      init(this);
     });
+
   };
 }(jQuery));

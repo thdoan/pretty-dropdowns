@@ -1,11 +1,12 @@
 # jQuery Pretty Dropdowns
 
-Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>` drop-down menus into "pretty" menus that you can skin using CSS.
+Pretty Dropdowns is a simple, lightweight jQuery plugin that converts `<select>` drop-down menus into "pretty" menus that you can style using CSS.
 
 ### Features:
 
 - Two arrow styles and sizes to choose from (or add your own style)
 - Support for multiple-select lists (`<select multiple>`)
+- Support for option groups (`<optgroup>`)
 - Tooltips (`title`) carried over at both `<select>` and `<option>` levels
 - Full keyboard navigation (you can even go directly to a menu item by typing its text)
 - Auto-linked to `<label for>` (menu will get focus when you click on the label)
@@ -52,13 +53,32 @@ $(document).ready(function() {
 
 ## Options
 
-Name                | Type   | Default      | Description
-------------------- | ------ | ------------ | -----------
-`customClass`       | string | arrow        | The class name to customize the drop-down menu style. The default `arrow` class displays a chevron-type arrow icon. Two additional helper classes are built in (add either or both to `arrow`): `triangle` converts the chevron into a solid triangle; `small` renders the arrow icon at half size.
-`height`            | number | 50           | The drop-down menu height. The minimum value is 8.
-`hoverIntent`       | number | 200          | The wait period (in milliseconds) before collapsing the drop-down menu after you hover off of it. If you hover back onto the menu within the wait period, it will remain open. The minimum value is 0.
-`selectedDelimiter` | string | ;            | The separator character to use for the list of selected values in a multi-select menu.
-`selectedMarker`    | string | **&#10003;** | The icon or symbol to mark that an item is selected in a multi-select menu. HTML is accepted (e.g., `<i class="fa fa-check"></i>`).
+Name                | Type     | Default      | Description
+------------------- | -------- | ------------ | -----------
+`customClass`       | string   | arrow        | The class name to customize the drop-down menu style. The default `arrow` class displays a chevron-type arrow icon. Two additional helper classes are built in (add either or both to `arrow`): `triangle` converts the chevron into a solid triangle; `small` renders the arrow icon at half size.
+`height`            | number   | 50           | The drop-down menu height. The minimum value is 8.
+`hoverIntent`       | number   | 200          | The wait period (in milliseconds) before collapsing the drop-down menu after you hover off of it. If you hover back onto the menu within the wait period, it will remain open. The minimum value is 0.
+`selectedDelimiter` | string   | ;            | The separator character to use for the list of selected values in a multi-select menu.
+`selectedMarker`    | string   | **&#10003;** | The icon or symbol to mark that an item is selected in a multi-select menu. HTML is accepted (e.g., `<i class="fa fa-check"></i>`).
+`afterLoad`         | function |              | Callback function to execute after the drop-down menu widget is loaded.
+
+## Methods
+
+Name        | Description
+------------| -----------
+`refresh()` | Rebuild the drop-down menu. You should do this whenever the `<select>` state changes (e.g., one or more `<option>` gets added, removed, or disabled).
+
+**Example:**
+
+```
+<script>
+$(document).ready(function() {
+  $dropdown = $('select').prettyDropdown();
+});
+// When <select> state changes...
+$dropdown.refresh();
+</script>
+```
 
 ## Keyboard Navigation
 

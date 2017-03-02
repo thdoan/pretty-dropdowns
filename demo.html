@@ -147,7 +147,7 @@ repeatedly here for the "view source" functionality.
       <option value="40">40</option>
     </select>
     <script>
-    $(function() {
+    $(document).ready(function() {
       // Initiate Pretty Dropdowns
       $('.pretty').prettyDropdown();
     });
@@ -164,7 +164,7 @@ repeatedly here for the "view source" functionality.
       <option value="date" title="Sort by Newest First">Newest</option>
     </select>
     <script>
-    $(function() {
+    $(document).ready(function() {
       // Initiate Pretty Dropdowns
       $('.pretty').prettyDropdown();
     });
@@ -181,7 +181,7 @@ repeatedly here for the "view source" functionality.
       <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
     </select>
     <script>
-    $(function() {
+    $(document).ready(function() {
       // Initiate Pretty Dropdowns
       $('.pretty-alt').prettyDropdown({
         customClass: 'arrow triangle small',
@@ -199,7 +199,7 @@ repeatedly here for the "view source" functionality.
       <option value="blue" selected>Blue</option>
     </select>
     <script>
-    $(function() {
+    $(document).ready(function() {
       // Initiate Pretty Dropdowns
       $('.pretty').prettyDropdown();
     });
@@ -214,7 +214,29 @@ repeatedly here for the "view source" functionality.
       <option value="76023" title="Out of Stock" disabled>LEGO&reg; 76023 The Tumbler</option>
     </select>
     <script>
-    $(function() {
+    $(document).ready(function() {
+      // Initiate Pretty Dropdowns
+      $('.pretty').prettyDropdown();
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
+  <section>
+    <label for="games">Option groups:</label><br>
+    <select id="games" name="games" title="What do you want to play?" class="pretty">
+      <optgroup label="Arcade">
+        <option>Asteroids</option>
+        <option>Donkey Kong</option>
+        <option>Pac-Man</option>
+      </optgroup>
+      <optgroup label="Casual">
+        <option>Angry Birds</option>
+        <option>Candy Crush Saga</option>
+        <option>Clash of Clans</option>
+      </optgroup>
+    </select>
+    <script>
+    $(document).ready(function() {
       // Initiate Pretty Dropdowns
       $('.pretty').prettyDropdown();
     });
