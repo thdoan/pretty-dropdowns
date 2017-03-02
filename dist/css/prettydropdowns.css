@@ -69,7 +69,7 @@
 .prettydropdown > ul > li:first-child, .prettydropdown > ul.active > li {
   display: block;
 }
-.prettydropdown > ul.active > li:hover, .prettydropdown > ul.active > li.hover, .prettydropdown > ul.active > li:first-child:hover:after {
+.prettydropdown > ul.active > li:not(.label):hover, .prettydropdown > ul.active > li.hover:not(.label), .prettydropdown > ul.active > li:first-child:hover:after {
   background: #1e90ff;
   color: #fff;
 }

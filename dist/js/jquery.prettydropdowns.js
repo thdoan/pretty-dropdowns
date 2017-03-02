@@ -322,7 +322,7 @@
       },
 
       // Construct menu item
-      renderItem = function(elOpt, sClass, bSelected, bOptGroup) {
+      renderItem = function(elOpt, sClass, bSelected) {
         var sGroup = '',
           sText;
         sClass = sClass || '';
@@ -337,7 +337,7 @@
               sText = elOpt.getAttribute('label');
               break;
           }
-          if (elOpt.disabled) sClass += ' disabled';
+          if (elOpt.disabled || (sGroup && elOpt.parentNode.disabled)) sClass += ' disabled';
         }
         ++nCount;
         return '<li id="item' + nTimestamp + '-' + nCount + '"'
