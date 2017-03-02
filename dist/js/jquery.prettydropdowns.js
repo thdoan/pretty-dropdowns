@@ -324,7 +324,8 @@
       // Construct menu item
       renderItem = function(elOpt, sClass, bSelected) {
         var sGroup = '',
-          sText;
+          sText,
+          sTitle;
         sClass = sClass || '';
         if (elOpt) {
           switch (elOpt.nodeName) {
@@ -338,13 +339,15 @@
               break;
           }
           if (elOpt.disabled || (sGroup && elOpt.parentNode.disabled)) sClass += ' disabled';
+          sTitle = elOpt.title;
+          if (sGroup && !sTitle) sTitle = elOpt.parentNode.title;
         }
         ++nCount;
         return '<li id="item' + nTimestamp + '-' + nCount + '"'
           + (sGroup ? ' data-group="' + sGroup + '"' : '')
           + (elOpt && elOpt.value ? ' data-value="' + elOpt.value + '"' : '')
           + (elOpt && elOpt.nodeName==='OPTION' ? ' role="option"' : '')
-          + (elOpt && elOpt.title ? ' title="' + elOpt.title + '" aria-label="' + elOpt.title + '"' : '')
+          + (sTitle ? ' title="' + sTitle + '" aria-label="' + sTitle + '"' : '')
           + (sClass ? ' class="' + $.trim(sClass) + '"' : '')
           + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
           + 'px;line-height:' + (oOptions.height-2) + 'px"' : '') + '>' + sText
