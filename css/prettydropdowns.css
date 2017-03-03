@@ -33,10 +33,10 @@
 .prettydropdown > ul:focus, .prettydropdown:not(.disabled) > ul:hover {
   border-color: #7f7f7f;
 }
-.prettydropdown > ul.active {
+.prettydropdown:not(.disabled) > ul.active {
   width: auto;
   max-height: none !important;
-  border-color: #1e90ff !important;
+  border-color: #1e90ff;
   overflow-x: hidden;
   overflow-y: auto;
   z-index: 2;
