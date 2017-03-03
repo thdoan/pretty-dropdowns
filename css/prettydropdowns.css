@@ -52,9 +52,11 @@
   position: relative;
   min-width: 70px;
   height: 48px; /* 50px - borders */
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
   box-sizing: border-box;
   display: none;
-  line-height: 48px; /* 50px - borders */
+  line-height: 46px; /* 48px - borders */
   margin: 0;
   padding-left: 0.8rem;
 }
@@ -134,9 +136,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.prettydropdown.multiple > ul > li.selected + li, .prettydropdown.multiple > ul.reverse > li.selected {
-  border-top: 1px solid #dedede;
-}
 .prettydropdown > ul > li > span.checked {
   clear: both;
   float: right;
@@ -148,9 +147,6 @@
 .prettydropdown > ul > li.label {
   cursor: default;
   font-weight: bold;
-}
-.prettydropdown > ul > li.label, .prettydropdown > ul > li.label ~ li.selected {
-  border-top: 1px solid #dedede;
 }
 .prettydropdown > ul > li.label:first-child {
   border-top: none;
@@ -165,4 +161,10 @@
 }
 .prettydropdown.disabled > ul > li, .prettydropdown > ul > li.disabled {
   cursor: not-allowed;
+}
+
+/* Divider Lines */
+.prettydropdown.multiple > ul > li.selected + li, .prettydropdown.multiple > ul.reverse > li.selected,
+.prettydropdown > ul > li.label, .prettydropdown > ul > li.label ~ li.selected {
+  border-top-color: #dedede;
 }

@@ -117,7 +117,6 @@ Please [submit an issue](https://github.com/thdoan/pretty-dropdowns/issues) if t
 ## Known Issues
 
 - After resizing the window, the drop-down menu near the bottom of the page sometimes doesn't open in reverse.
-- The multi-select container height is larger by one pixel.
 - The `title` value will be read twice in some screen reader clients (once for `title`, once for `aria-label`).
 
 ## Installation
