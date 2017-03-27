@@ -118,15 +118,12 @@
 .prettydropdown > ul:hover > li.selected:before {
   border-top-color: #7f7f7f;
 }
-.prettydropdown > ul.active > li.selected:before {
-  border-top-color: #1e90ff;
+.prettydropdown > ul.active > li.selected:before,
+.prettydropdown > ul.active > li.selected:after {
+  border: none;
 }
-.prettydropdown > ul.active > li.selected:hover:before {
-  border-top-color: #fff;
-}
-.prettydropdown > ul.active > li.selected:hover:after {
-  background: none;
-  border-top-color: #1e90ff;
+.prettydropdown > ul:not(.active) > li > span.checked {
+  display: none;
 }
 
 /* Multi-Select */
@@ -148,11 +145,20 @@
   cursor: default;
   font-weight: bold;
 }
-.prettydropdown > ul > li.label:first-child {
+.prettydropdown > ul > li.label:first-child,
+.prettydropdown.classic > ul > li.label ~ li.selected{
   border-top: none;
 }
-.prettydropdown > ul > li.label ~ li:not(.label):not(.selected) {
+.prettydropdown > ul > li.label ~ li:not(.label):not(.selected),
+.prettydropdown.classic > ul.active > li.label ~ li:not(.label) {
   padding-left: 1.6rem;
+}
+
+/* Classic Behavior */
+.prettydropdown.classic > ul:not(.active) > li.selected:not(:first-child) {
+  position: absolute;
+  top: 0;
+  display: block;
 }
 
 /* Disabled */
