@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.7.2 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.8.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -11,6 +11,7 @@
 
     // Default options
     oOptions = $.extend({
+      classic: false,
       customClass: 'arrow',
       height: 50,
       hoverIntent: 200,
@@ -19,7 +20,7 @@
       afterLoad: function(){}
     }, oOptions);
 
-    oOptions.selectedMarker = ' <span aria-hidden="true" class="checked">' + oOptions.selectedMarker + '</span>';
+    oOptions.selectedMarker = '<span aria-hidden="true" class="checked"> ' + oOptions.selectedMarker + '</span>';
     // Validate options
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
@@ -58,6 +59,7 @@
         }
         nCount = 0;
         var $items = $('optgroup, option', $select),
+          $selected = $items.filter(':selected'),
           bMultiple = elSel.multiple,
           nWidth = $select.outerWidth(),
           // Height - 2px for borders
@@ -83,16 +85,23 @@
             }
           });
         } else {
-          $items.filter(':selected').each(function() {
-            sHtml += renderItem(this, 'selected');
-          });
-          $items.filter(':not(:selected)').each(function() {
-            sHtml += renderItem(this);
-          });
+          if (oOptions.classic) {
+            $items.each(function() {
+              sHtml += renderItem(this);
+            });
+          } else {
+            sHtml += renderItem($selected[0], 'selected');
+            $items.filter(':not(:selected)').each(function() {
+              sHtml += renderItem(this);
+            });
+          }
         }
         sHtml += '</ul>';
         $select.wrap('<div ' + (sId ? 'id="prettydropdown-' + sId + '" ' : '')
-          + 'class="prettydropdown ' + (elSel.disabled ? 'disabled ' : '') + (bMultiple ? 'multiple ' : '')
+          + 'class="prettydropdown '
+          + (oOptions.classic ? 'classic ' : '')
+          + (elSel.disabled ? 'disabled ' : '')
+          + (bMultiple ? 'multiple ' : '')
           + oOptions.customClass + ' loading"'
           // NOTE: For some reason, the container height is larger by 1px if the
           // <select> has the 'multiple' attribute or 'size' attribute with a
@@ -105,6 +114,7 @@
         $items = $dropdown.children();
         // Update default selected values for multi-select menu
         if (bMultiple) updateSelected($dropdown);
+        else if (oOptions.classic) $('[data-value=' + $selected.val() + ']', $dropdown).addClass('selected').append(oOptions.selectedMarker);
         // Calculate width if initially hidden
         if ($dropdown.width()<=0) {
           var $clone = $dropdown.parent().clone().css({
@@ -139,14 +149,20 @@
               updateSelected($dropdown);
             } else {
               var $selected = $dropdown.children('.selected');
-              $selected.removeClass('selected');
-              $dropdown.prepend($li.addClass('selected')).removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
-              if ($selected.data('group')) $dropdown.children('.label').filter(function() {
+              $selected.removeClass('selected').children('span.checked').remove();
+              $li.addClass('selected').append(oOptions.selectedMarker);
+              if (!oOptions.classic) $dropdown.prepend($li);
+              $dropdown.removeClass('reverse').attr('aria-activedescendant', $li.attr('id'));
+              if ($selected.data('group') && !oOptions.classic) $dropdown.children('.label').filter(function() {
                 return $(this).text()===$selected.data('group');
               }).after($selected);
               // Sync <select> element
               $('optgroup, option', $select).filter(function() {
-                return (this.value===$li.data('value') || this.text===$li.text());
+                // NOTE: .data('value') can return numeric, so using == comparison instead.
+                return this.value==$li.data('value') || this.text===$li.contents().filter(function() {
+                    // Filter out selected marker
+                    return this.nodeType===3;
+                  }).text();
               }).prop('selected', true);
             }
             $select.trigger('change');
@@ -169,7 +185,8 @@
             if (nDropdownBottom>nWinHeight) {
               // Expand to direction that has the most space
               if (nOffsetTop-nScrollTop>nWinHeight-(nOffsetTop-nScrollTop+oOptions.height)) {
-                $dropdown.addClass('reverse').append($dropdown.children('.selected'));
+                $dropdown.addClass('reverse');
+                if (!oOptions.classic) $dropdown.append($dropdown.children('.selected'));
                 if (nOffsetTop-nScrollTop+oOptions.height<nDropdownHeight) {
                   $dropdown.outerHeight(nOffsetTop-nScrollTop+oOptions.height);
                   $dropdown.scrollTop(nDropdownHeight);
@@ -358,7 +375,7 @@
           + (sClass ? ' class="' + $.trim(sClass) + '"' : '')
           + ((oOptions.height!==50) ? ' style="height:' + (oOptions.height-2)
           + 'px;line-height:' + (oOptions.height-4) + 'px;"' : '') + '>' + sText
-          + (bSelected ? oOptions.selectedMarker : '') + '</li>';
+          + ((bSelected || sClass==='selected') ? oOptions.selectedMarker : '') + '</li>';
       },
 
       // Reset menu state
@@ -375,7 +392,7 @@
         clearTimeout(nTimer);
         nTimer = setTimeout(function() {
           if ($dropdown.data('hover')) return;
-          if ($dropdown.hasClass('reverse')) $dropdown.prepend($dropdown.children(':last-child'));
+          if ($dropdown.hasClass('reverse') && !oOptions.classic) $dropdown.prepend($dropdown.children(':last-child'));
           $dropdown.removeClass('active reverse').removeData('clicked').attr('aria-expanded', 'false').css('height', '');
           $dropdown.children().removeClass('hover nohover');
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
