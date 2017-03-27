@@ -181,15 +181,15 @@ repeatedly here for the "view source" functionality.
   <section>
     <label for="size">With event handler:</label><br>
     <select id="size" name="size" class="pretty" onchange="alert('You selected ' + value)">
-      <option value="32">32</option>
-      <option value="33">33</option>
-      <option value="34">34</option>
-      <option value="35">35</option>
-      <option value="36">36</option>
-      <option value="37">37</option>
-      <option value="38">38</option>
-      <option value="39">39</option>
-      <option value="40">40</option>
+      <option>32</option>
+      <option>33</option>
+      <option>34</option>
+      <option>35</option>
+      <option>36</option>
+      <option>37</option>
+      <option>38</option>
+      <option>39</option>
+      <option>40</option>
     </select>
     <script>
     $(document).ready(function() {
@@ -252,6 +252,26 @@ repeatedly here for the "view source" functionality.
       $('.pretty-alt').prettyDropdown({
         customClass: 'arrow triangle small',
         height: 30
+      });
+    });
+    </script>
+  </section>
+  <p><small>[<a href="javascript:;">view source</a>]</small></p>
+  <section>
+    <label for="qty">Class behavior:</label><br>
+    <select id="qty" name="qty" class="pretty-classic">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
+    <script>
+    $(document).ready(function() {
+      // Initiate Pretty Dropdowns
+      $('.pretty-classic').prettyDropdown({
+        classic: true,
+        customClass: 'arrow triangle',
       });
     });
     </script>
@@ -368,7 +388,7 @@ $('form > section').each(function() {
 $('small > a').click(viewSource);
 </script>
 <script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
