@@ -114,7 +114,7 @@
         $items = $dropdown.children();
         // Update default selected values for multi-select menu
         if (bMultiple) updateSelected($dropdown);
-        else if (oOptions.classic) $('[data-value=' + $selected.val() + ']', $dropdown).addClass('selected').append(oOptions.selectedMarker);
+        else if (oOptions.classic) $('[data-value="' + $selected.val() + '"]', $dropdown).addClass('selected').append(oOptions.selectedMarker);
         // Calculate width if initially hidden
         if ($dropdown.width()<=0) {
           var $clone = $dropdown.parent().clone().css({
