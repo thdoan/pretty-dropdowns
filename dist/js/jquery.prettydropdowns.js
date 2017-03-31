@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.8.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.9.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -67,7 +67,9 @@
             + (elSel.title ? ' title="' + elSel.title + '" aria-label="' + elSel.title + '"' : '')
             + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
             + ' aria-activedescendant="item' + nTimestamp + '-1" aria-expanded="false"'
-            + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
+            + ' style="height:' + (oOptions.height-2) + 'px;'
+            + (elSel.size ? 'max-height:' + (oOptions.height-2)*elSel.size + 'px;' : '')
+            + 'margin:'
             // NOTE: $select.css('margin') returns an empty string in Firefox, so
             // we have to get each margin individually. See
             // https://github.com/jquery/jquery/issues/3383
