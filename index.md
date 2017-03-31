@@ -111,7 +111,7 @@ The following attributes are added to improve accessibility when using alternati
 - `aria-expanded` (this is `true` when the menu is open and `false` when it's closed)
 - `aria-label` (this is equivalent to the `title` attribute for screen readers)
 - `aria-labelledby` (points to the `<label>` element that is linked to the `<select>` if it exists)
-- `tabindex="0"` (to allow the widget to get focus)
+- `tabindex="0"` (to allow the widget to get focus when you hit the `Tab` key)
 
 Please [submit an issue](https://github.com/thdoan/pretty-dropdowns/issues) if there are other ways to improve accessibility.
 
