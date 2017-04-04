@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.9.4 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.9.5 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -138,11 +138,12 @@
         // NOTE: Setting width using width(), then css() because width() only can return a float,
         // which can result in a missing right border when there is a scrollbar.
         $items.width(nWidth).css('width', $items.css('width')).click(function() {
-          var $li = $(this);
+          var $li = $(this),
+            $selected = $dropdown.children('.selected');
           // Ignore disabled menu or menu item
           if ($dropdown.parent().hasClass('disabled') || $li.hasClass('disabled') || $li.hasClass('label')) return;
           // Only update if different value selected
-          if ($dropdown.hasClass('active') && $li.data('value')!==$dropdown.children('.selected').data('value')) {
+          if ($dropdown.hasClass('active') && $li.data('value')!==$selected.data('value')) {
             // Select highlighted item
             if (bMultiple) {
               if ($li.children('span.checked').length) $li.children('span.checked').remove();
@@ -154,7 +155,6 @@
               // Update selected values for multi-select menu
               updateSelected($dropdown);
             } else {
-              var $selected = $dropdown.children('.selected');
               $selected.removeClass('selected').children('span.checked').remove();
               $li.addClass('selected').append(oOptions.selectedMarker);
               if (!oOptions.classic) $dropdown.prepend($li);
@@ -187,7 +187,7 @@
               nScrollTop = document.body.scrollTop,
               nDropdownHeight = $dropdown.outerHeight();
             if (nSize) {
-              nMaxHeight = (oOptions.height-2)*nSize;
+              nMaxHeight = nSize*(oOptions.height-2);
               if (nMaxHeight<nDropdownHeight-2) nDropdownHeight = nMaxHeight+2;
             }
             var nDropdownBottom = nOffsetTop-nScrollTop+nDropdownHeight;
@@ -195,7 +195,7 @@
               // Expand to direction that has the most space
               if (nOffsetTop-nScrollTop>nWinHeight-(nOffsetTop-nScrollTop+oOptions.height)) {
                 $dropdown.addClass('reverse');
-                if (!oOptions.classic) $dropdown.append($dropdown.children('.selected'));
+                if (!oOptions.classic) $dropdown.append($selected);
                 if (nOffsetTop-nScrollTop+oOptions.height<nDropdownHeight) {
                   $dropdown.outerHeight(nOffsetTop-nScrollTop+oOptions.height);
                   // Ensure the selected item is in view
@@ -207,7 +207,7 @@
             }
             if (nMaxHeight && nMaxHeight<$dropdown.height()) $dropdown.css('height', nMaxHeight + 'px');
             // Ensure the selected item is in view
-            if (oOptions.classic) $li[0].scrollIntoView(!$dropdown.hasClass('reverse'));
+            if (oOptions.classic) $dropdown.scrollTop($selected.index()*(oOptions.height-2));
           } else {
             $dropdown.data('clicked', true);
             resetDropdown($dropdown[0]);
