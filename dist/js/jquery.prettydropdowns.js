@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.9.2 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.9.4 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -179,15 +179,18 @@
           }
           // Try to keep drop-down menu within viewport
           if ($dropdown.hasClass('active')) {
-            // Ensure the selected item is in view
-            $dropdown.scrollTop(0);
             // Close any other open menus
             if ($('.prettydropdown > ul.active').length>1) resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
             var nWinHeight = window.innerHeight,
+              nMaxHeight,
               nOffsetTop = $dropdown.offset().top,
               nScrollTop = document.body.scrollTop,
-              nDropdownHeight = $dropdown.outerHeight(),
-              nDropdownBottom = nOffsetTop-nScrollTop+nDropdownHeight;
+              nDropdownHeight = $dropdown.outerHeight();
+            if (nSize) {
+              nMaxHeight = (oOptions.height-2)*nSize;
+              if (nMaxHeight<nDropdownHeight-2) nDropdownHeight = nMaxHeight+2;
+            }
+            var nDropdownBottom = nOffsetTop-nScrollTop+nDropdownHeight;
             if (nDropdownBottom>nWinHeight) {
               // Expand to direction that has the most space
               if (nOffsetTop-nScrollTop>nWinHeight-(nOffsetTop-nScrollTop+oOptions.height)) {
@@ -195,16 +198,16 @@
                 if (!oOptions.classic) $dropdown.append($dropdown.children('.selected'));
                 if (nOffsetTop-nScrollTop+oOptions.height<nDropdownHeight) {
                   $dropdown.outerHeight(nOffsetTop-nScrollTop+oOptions.height);
+                  // Ensure the selected item is in view
                   $dropdown.scrollTop(nDropdownHeight);
                 }
               } else {
                 $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
               }
             }
-            if (nSize) {
-              var nMaxHeight = (oOptions.height-2)*nSize;
-              if (nMaxHeight<parseInt($dropdown.css('height'))) $dropdown.css('height', nMaxHeight + 'px');
-            }
+            if (nMaxHeight && nMaxHeight<$dropdown.height()) $dropdown.css('height', nMaxHeight + 'px');
+            // Ensure the selected item is in view
+            if (oOptions.classic) $li[0].scrollIntoView(!$dropdown.hasClass('reverse'));
           } else {
             $dropdown.data('clicked', true);
             resetDropdown($dropdown[0]);
@@ -259,7 +262,10 @@
         $dropdown.data('lastKeypress', +new Date());
         switch (e.which) {
           case 13: // Enter
-            if (!bOpen) toggleHover($current, 1);
+            if (!bOpen) {
+              $current = $items.filter('.selected');
+              toggleHover($current, 1);
+            }
             $current.click();
             break;
           case 27: // Esc
@@ -269,6 +275,7 @@
             if (bOpen) {
               sKey = ' ';
             } else {
+              $current = $items.filter('.selected');
               toggleHover($current, 1);
               $current.click();
             }
@@ -408,6 +415,7 @@
       },
 
       // Set menu item hover state
+      // bNoScroll set on hoverDropdownItem()
       toggleHover = function($li, bOn, bNoScroll) {
         if (bOn) {
           $li.removeClass('nohover').addClass('hover');
