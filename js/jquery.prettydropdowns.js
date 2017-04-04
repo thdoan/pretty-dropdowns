@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.9.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.9.4 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -40,10 +40,13 @@
       // Initiate pretty drop-downs
       init = function(elSel) {
         var $select = $(elSel),
+          nSize = elSel.size,
           sId = elSel.name || elSel.id || '',
           sLabelId;
         // Exit if widget has already been initiated
         if ($select.data('loaded')) return;
+        // Remove 'size' attribute to it doesn't affect vertical alignment
+        $select.data('size', nSize).removeAttr('size');
         // Set <select> height to reserve space for <div> container
         $select.css('visibility', 'hidden').outerHeight(oOptions.height);
         nTimestamp = +new Date();
@@ -61,22 +64,24 @@
         var $items = $('optgroup, option', $select),
           $selected = $items.filter(':selected'),
           bMultiple = elSel.multiple,
-          nWidth = $select.outerWidth(),
           // Height - 2px for borders
           sHtml = '<ul' + (elSel.disabled ? '' : ' tabindex="0"') + ' role="listbox"'
             + (elSel.title ? ' title="' + elSel.title + '" aria-label="' + elSel.title + '"' : '')
             + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
             + ' aria-activedescendant="item' + nTimestamp + '-1" aria-expanded="false"'
-            + ' style="height:' + (oOptions.height-2) + 'px;'
-            + (elSel.size ? 'max-height:' + (oOptions.height-2)*elSel.size + 'px;' : '')
-            + 'margin:'
-            // NOTE: $select.css('margin') returns an empty string in Firefox, so
-            // we have to get each margin individually. See
-            // https://github.com/jquery/jquery/issues/3383
+            + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
+            // NOTE: $select.css('margin') returns an empty string in Firefox, so we have to get
+            // each margin individually. See https://github.com/jquery/jquery/issues/3383
             + $select.css('margin-top') + ' '
             + $select.css('margin-right') + ' '
             + $select.css('margin-bottom') + ' '
             + $select.css('margin-left') + ';">';
+        // NOTE: If 'size' attribute is larger than 1, then the first item won't be selected by
+        // default, so we have to do it manually.
+        if (!$selected[0]) {
+          $items[0].selected = true;
+          $selected = $items.filter(':selected');
+        }
         if (bMultiple) {
           sHtml += renderItem(null, 'selected');
           $items.each(function() {
@@ -105,10 +110,10 @@
           + (elSel.disabled ? 'disabled ' : '')
           + (bMultiple ? 'multiple ' : '')
           + oOptions.customClass + ' loading"'
-          // NOTE: For some reason, the container height is larger by 1px if the
-          // <select> has the 'multiple' attribute or 'size' attribute with a
-          // value larger than 1. To fix this, we have to inline the height.
-          + ((bMultiple || elSel.size>1) ? ' style="height:' + oOptions.height + 'px;"' : '')
+          // NOTE: For some reason, the container height is larger by 1px if the <select> has the
+          // 'multiple' attribute or 'size' attribute with a value larger than 1. To fix this, we
+          // have to inline the height.
+          + ((bMultiple || nSize>1) ? ' style="height:' + oOptions.height + 'px;"' : '')
           +'></div>').before(sHtml).data('loaded', true);
         var $dropdown = $select.parent().children('ul'),
           nWidth = $dropdown.outerWidth(true),
@@ -130,9 +135,8 @@
           $clone.remove();
         }
         // Set dropdown width and event handler
-        // NOTE: Setting width using width(), then css() because width() only can
-        // return a float, which can result in a missing right border when there
-        // is a scrollbar.
+        // NOTE: Setting width using width(), then css() because width() only can return a float,
+        // which can result in a missing right border when there is a scrollbar.
         $items.width(nWidth).css('width', $items.css('width')).click(function() {
           var $li = $(this);
           // Ignore disabled menu or menu item
@@ -175,15 +179,18 @@
           }
           // Try to keep drop-down menu within viewport
           if ($dropdown.hasClass('active')) {
-            // Ensure the selected item is in view
-            $dropdown.scrollTop(0);
             // Close any other open menus
             if ($('.prettydropdown > ul.active').length>1) resetDropdown($('.prettydropdown > ul.active').not($dropdown)[0]);
             var nWinHeight = window.innerHeight,
+              nMaxHeight,
               nOffsetTop = $dropdown.offset().top,
               nScrollTop = document.body.scrollTop,
-              nDropdownHeight = $dropdown.outerHeight(),
-              nDropdownBottom = nOffsetTop-nScrollTop+nDropdownHeight;
+              nDropdownHeight = $dropdown.outerHeight();
+            if (nSize) {
+              nMaxHeight = (oOptions.height-2)*nSize;
+              if (nMaxHeight<nDropdownHeight-2) nDropdownHeight = nMaxHeight+2;
+            }
+            var nDropdownBottom = nOffsetTop-nScrollTop+nDropdownHeight;
             if (nDropdownBottom>nWinHeight) {
               // Expand to direction that has the most space
               if (nOffsetTop-nScrollTop>nWinHeight-(nOffsetTop-nScrollTop+oOptions.height)) {
@@ -191,12 +198,16 @@
                 if (!oOptions.classic) $dropdown.append($dropdown.children('.selected'));
                 if (nOffsetTop-nScrollTop+oOptions.height<nDropdownHeight) {
                   $dropdown.outerHeight(nOffsetTop-nScrollTop+oOptions.height);
+                  // Ensure the selected item is in view
                   $dropdown.scrollTop(nDropdownHeight);
                 }
               } else {
                 $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
               }
             }
+            if (nMaxHeight && nMaxHeight<$dropdown.height()) $dropdown.css('height', nMaxHeight + 'px');
+            // Ensure the selected item is in view
+            if (oOptions.classic) $li[0].scrollIntoView(!$dropdown.hasClass('reverse'));
           } else {
             $dropdown.data('clicked', true);
             resetDropdown($dropdown[0]);
@@ -251,7 +262,10 @@
         $dropdown.data('lastKeypress', +new Date());
         switch (e.which) {
           case 13: // Enter
-            if (!bOpen) toggleHover($current, 1);
+            if (!bOpen) {
+              $current = $items.filter('.selected');
+              toggleHover($current, 1);
+            }
             $current.click();
             break;
           case 27: // Esc
@@ -261,6 +275,7 @@
             if (bOpen) {
               sKey = ' ';
             } else {
+              $current = $items.filter('.selected');
               toggleHover($current, 1);
               $current.click();
             }
@@ -292,16 +307,15 @@
           case 38: // Up
             if (bOpen) {
               toggleHover($current, 0);
-              // If not already key-navigated or first item is selected, cycle to
-              // the last item; or else select the previous item
+              // If not already key-navigated or first item is selected, cycle to the last item; or
+              // else select the previous item
               toggleHover(nHoverIndex ? $items.eq(nHoverIndex-1) : $items.eq(nLastIndex), 1);
             }
             break;
           case 40: // Down
             if (bOpen) {
               toggleHover($current, 0);
-              // If last item is selected, cycle to the first item; or else select
-              // the next item
+              // If last item is selected, cycle to the first item; or else select the next item
               toggleHover(nHoverIndex===nLastIndex ? $items.eq(0) : $items.eq(nHoverIndex+1), 1);
             }
             break;
@@ -348,9 +362,10 @@
       },
 
       // Construct menu item
+      // elOpt is null for first item in multi-select menus
       renderItem = function(elOpt, sClass, bSelected) {
         var sGroup = '',
-          sText,
+          sText = '',
           sTitle;
         sClass = sClass || '';
         if (elOpt) {
@@ -384,11 +399,10 @@
       // @param o Event or Element object
       resetDropdown = function(o) {
         var $dropdown = $(o.currentTarget||o);
-        // NOTE: Sometimes it's possible for $dropdown to point to the wrong
-        // element when you quickly hover over another menu. To prevent this, we
-        // need to check for .active as a backup and manually reassign $dropdown.
-        // This also requires that it's not clicked on because in rare cases the
-        // reassignment fails and the reverse menu will not get reset.
+        // NOTE: Sometimes it's possible for $dropdown to point to the wrong element when you
+        // quickly hover over another menu. To prevent this, we need to check for .active as a
+        // backup and manually reassign $dropdown. This also requires that it's not clicked on
+        // because in rare cases the reassignment fails and the reverse menu will not get reset.
         if (o.type==='mouseleave' && !$dropdown.hasClass('active') && !$dropdown.data('clicked')) $dropdown = $('.prettydropdown > ul.active');
         $dropdown.data('hover', false);
         clearTimeout(nTimer);
@@ -401,6 +415,7 @@
       },
 
       // Set menu item hover state
+      // bNoScroll set on hoverDropdownItem()
       toggleHover = function($li, bOn, bNoScroll) {
         if (bOn) {
           $li.removeClass('nohover').addClass('hover');
@@ -455,6 +470,7 @@
         var $select = $(this);
         $select.prevAll('ul').remove();
         $select.unwrap().data('loaded', false);
+        this.size = $select.data('size');
         init(this);
       });
     };

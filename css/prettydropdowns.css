@@ -35,7 +35,7 @@
 }
 .prettydropdown:not(.disabled) > ul.active {
   width: auto;
-  height: auto !important;
+  max-height: none !important;
   border-color: #1e90ff;
   overflow-x: hidden;
   overflow-y: auto;
