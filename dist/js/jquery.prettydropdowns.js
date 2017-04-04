@@ -46,7 +46,7 @@
         // Exit if widget has already been initiated
         if ($select.data('loaded')) return;
         // Remove 'size' attribute to it doesn't affect vertical alignment
-        $select.removeAttr('size');
+        $select.data('size', nSize).removeAttr('size');
         // Set <select> height to reserve space for <div> container
         $select.css('visibility', 'hidden').outerHeight(oOptions.height);
         nTimestamp = +new Date();
@@ -62,9 +62,7 @@
         }
         nCount = 0;
         var $items = $('optgroup, option', $select),
-          $selected = $items.filter(':selected'),
           bMultiple = elSel.multiple,
-          nWidth = $select.outerWidth(),
           // Height - 2px for borders
           sHtml = '<ul' + (elSel.disabled ? '' : ' tabindex="0"') + ' role="listbox"'
             + (elSel.title ? ' title="' + elSel.title + '" aria-label="' + elSel.title + '"' : '')
@@ -93,7 +91,11 @@
               sHtml += renderItem(this);
             });
           } else {
-            sHtml += renderItem($selected[0], 'selected');
+            // NOTE: If 'size' attribute is larger than 1, then the first item
+            // won't be selected by default, so we have to do it manually.
+            var $selected = $items.filter(':selected');
+            if (!$selected[0]) $items[0].selected = true;
+            sHtml += renderItem($selected[0] || $items[0], 'selected');
             $items.filter(':not(:selected)').each(function() {
               sHtml += renderItem(this);
             });
@@ -353,9 +355,10 @@
       },
 
       // Construct menu item
+      // elOpt is null for first item in multi-select menus
       renderItem = function(elOpt, sClass, bSelected) {
         var sGroup = '',
-          sText,
+          sText = '',
           sTitle;
         sClass = sClass || '';
         if (elOpt) {
@@ -460,6 +463,7 @@
         var $select = $(this);
         $select.prevAll('ul').remove();
         $select.unwrap().data('loaded', false);
+        this.size = $select.data('size');
         init(this);
       });
     };
