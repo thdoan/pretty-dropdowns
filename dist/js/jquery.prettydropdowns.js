@@ -70,15 +70,14 @@
             + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
             + ' aria-activedescendant="item' + nTimestamp + '-1" aria-expanded="false"'
             + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
-            // NOTE: $select.css('margin') returns an empty string in Firefox, so
-            // we have to get each margin individually. See
-            // https://github.com/jquery/jquery/issues/3383
+            // NOTE: $select.css('margin') returns an empty string in Firefox, so we have to get
+            // each margin individually. See https://github.com/jquery/jquery/issues/3383
             + $select.css('margin-top') + ' '
             + $select.css('margin-right') + ' '
             + $select.css('margin-bottom') + ' '
             + $select.css('margin-left') + ';">';
-        // NOTE: If 'size' attribute is larger than 1, then the first item won't
-        // be selected by default, so we have to do it manually.
+        // NOTE: If 'size' attribute is larger than 1, then the first item won't be selected by
+        // default, so we have to do it manually.
         if (!$selected[0]) {
           $items[0].selected = true;
           $selected = $items.filter(':selected');
@@ -111,9 +110,9 @@
           + (elSel.disabled ? 'disabled ' : '')
           + (bMultiple ? 'multiple ' : '')
           + oOptions.customClass + ' loading"'
-          // NOTE: For some reason, the container height is larger by 1px if the
-          // <select> has the 'multiple' attribute or 'size' attribute with a
-          // value larger than 1. To fix this, we have to inline the height.
+          // NOTE: For some reason, the container height is larger by 1px if the <select> has the
+          // 'multiple' attribute or 'size' attribute with a value larger than 1. To fix this, we
+          // have to inline the height.
           + ((bMultiple || nSize>1) ? ' style="height:' + oOptions.height + 'px;"' : '')
           +'></div>').before(sHtml).data('loaded', true);
         var $dropdown = $select.parent().children('ul'),
@@ -136,9 +135,8 @@
           $clone.remove();
         }
         // Set dropdown width and event handler
-        // NOTE: Setting width using width(), then css() because width() only can
-        // return a float, which can result in a missing right border when there
-        // is a scrollbar.
+        // NOTE: Setting width using width(), then css() because width() only can return a float,
+        // which can result in a missing right border when there is a scrollbar.
         $items.width(nWidth).css('width', $items.css('width')).click(function() {
           var $li = $(this);
           // Ignore disabled menu or menu item
@@ -302,16 +300,15 @@
           case 38: // Up
             if (bOpen) {
               toggleHover($current, 0);
-              // If not already key-navigated or first item is selected, cycle to
-              // the last item; or else select the previous item
+              // If not already key-navigated or first item is selected, cycle to the last item; or
+              // else select the previous item
               toggleHover(nHoverIndex ? $items.eq(nHoverIndex-1) : $items.eq(nLastIndex), 1);
             }
             break;
           case 40: // Down
             if (bOpen) {
               toggleHover($current, 0);
-              // If last item is selected, cycle to the first item; or else select
-              // the next item
+              // If last item is selected, cycle to the first item; or else select the next item
               toggleHover(nHoverIndex===nLastIndex ? $items.eq(0) : $items.eq(nHoverIndex+1), 1);
             }
             break;
@@ -395,11 +392,10 @@
       // @param o Event or Element object
       resetDropdown = function(o) {
         var $dropdown = $(o.currentTarget||o);
-        // NOTE: Sometimes it's possible for $dropdown to point to the wrong
-        // element when you quickly hover over another menu. To prevent this, we
-        // need to check for .active as a backup and manually reassign $dropdown.
-        // This also requires that it's not clicked on because in rare cases the
-        // reassignment fails and the reverse menu will not get reset.
+        // NOTE: Sometimes it's possible for $dropdown to point to the wrong element when you
+        // quickly hover over another menu. To prevent this, we need to check for .active as a
+        // backup and manually reassign $dropdown. This also requires that it's not clicked on
+        // because in rare cases the reassignment fails and the reverse menu will not get reset.
         if (o.type==='mouseleave' && !$dropdown.hasClass('active') && !$dropdown.data('clicked')) $dropdown = $('.prettydropdown > ul.active');
         $dropdown.data('hover', false);
         clearTimeout(nTimer);
