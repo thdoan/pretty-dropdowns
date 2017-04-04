@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.9.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.9.2 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -40,10 +40,13 @@
       // Initiate pretty drop-downs
       init = function(elSel) {
         var $select = $(elSel),
+          nSize = elSel.size,
           sId = elSel.name || elSel.id || '',
           sLabelId;
         // Exit if widget has already been initiated
         if ($select.data('loaded')) return;
+        // Remove 'size' attribute to it doesn't affect vertical alignment
+        $select.removeAttr('size');
         // Set <select> height to reserve space for <div> container
         $select.css('visibility', 'hidden').outerHeight(oOptions.height);
         nTimestamp = +new Date();
@@ -67,9 +70,7 @@
             + (elSel.title ? ' title="' + elSel.title + '" aria-label="' + elSel.title + '"' : '')
             + (sLabelId ? ' aria-labelledby="' + sLabelId + '"' : '')
             + ' aria-activedescendant="item' + nTimestamp + '-1" aria-expanded="false"'
-            + ' style="height:' + (oOptions.height-2) + 'px;'
-            + (elSel.size ? 'max-height:' + (oOptions.height-2)*elSel.size + 'px;' : '')
-            + 'margin:'
+            + ' style="max-height:' + (oOptions.height-2) + 'px;margin:'
             // NOTE: $select.css('margin') returns an empty string in Firefox, so
             // we have to get each margin individually. See
             // https://github.com/jquery/jquery/issues/3383
@@ -108,7 +109,7 @@
           // NOTE: For some reason, the container height is larger by 1px if the
           // <select> has the 'multiple' attribute or 'size' attribute with a
           // value larger than 1. To fix this, we have to inline the height.
-          + ((bMultiple || elSel.size>1) ? ' style="height:' + oOptions.height + 'px;"' : '')
+          + ((bMultiple || nSize>1) ? ' style="height:' + oOptions.height + 'px;"' : '')
           +'></div>').before(sHtml).data('loaded', true);
         var $dropdown = $select.parent().children('ul'),
           nWidth = $dropdown.outerWidth(true),
@@ -196,6 +197,10 @@
               } else {
                 $dropdown.height($dropdown.height()-(nDropdownBottom-nWinHeight));
               }
+            }
+            if (nSize) {
+              var nMaxHeight = (oOptions.height-2)*nSize;
+              if (nMaxHeight<parseInt($dropdown.css('height'))) $dropdown.css('height', nMaxHeight + 'px');
             }
           } else {
             $dropdown.data('clicked', true);
