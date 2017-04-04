@@ -62,6 +62,7 @@
         }
         nCount = 0;
         var $items = $('optgroup, option', $select),
+          $selected = $items.filter(':selected'),
           bMultiple = elSel.multiple,
           // Height - 2px for borders
           sHtml = '<ul' + (elSel.disabled ? '' : ' tabindex="0"') + ' role="listbox"'
@@ -76,6 +77,12 @@
             + $select.css('margin-right') + ' '
             + $select.css('margin-bottom') + ' '
             + $select.css('margin-left') + ';">';
+        // NOTE: If 'size' attribute is larger than 1, then the first item won't
+        // be selected by default, so we have to do it manually.
+        if (!$selected[0]) {
+          $items[0].selected = true;
+          $selected = $items.filter(':selected');
+        }
         if (bMultiple) {
           sHtml += renderItem(null, 'selected');
           $items.each(function() {
@@ -91,11 +98,7 @@
               sHtml += renderItem(this);
             });
           } else {
-            // NOTE: If 'size' attribute is larger than 1, then the first item
-            // won't be selected by default, so we have to do it manually.
-            var $selected = $items.filter(':selected');
-            if (!$selected[0]) $items[0].selected = true;
-            sHtml += renderItem($selected[0] || $items[0], 'selected');
+            sHtml += renderItem($selected[0], 'selected');
             $items.filter(':not(:selected)').each(function() {
               sHtml += renderItem(this);
             });
