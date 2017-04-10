@@ -98,8 +98,8 @@ Key     | Description
 `End`   | Jump to the last item in the drop-down menu.
 `PgUp`  | Go to the previous page of items. If there is no scrollbar, then this is the same as `Home`.
 `PgDn`  | Go to the next page of items. If there is no scrollbar, then this is the same as `End`.
-`Up`    | Highlight the previous item in the drop-down menu.
-`Down`  | Highlight the next item in the drop-down menu.
+`Up`    | Highlight the previous item in the drop-down menu. If already on the first item, then highlight the last item.
+`Down`  | Highlight the next item in the drop-down menu. If already on the last item, then highlight the first item.
 `A`-`Z`<br>`0`-`9`<br>`Space` | If the drop-down menu is open, jump to the first item matching the key(s) pressed. Every time you press a key it will cycle through the matching items. **Hint:** if you type fast enough, it will try to find a match for everything you typed instead of just the first character. If the menu is closed and in focus, `Space` opens the menu (same as `Enter`).
 
 ## Accessibility
