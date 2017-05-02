@@ -39,7 +39,7 @@
   border-color: #1e90ff;
   overflow-x: hidden;
   overflow-y: auto;
-  z-index: 2;
+  z-index: 99;
 }
 .prettydropdown > ul.active:focus {
   outline: none;
