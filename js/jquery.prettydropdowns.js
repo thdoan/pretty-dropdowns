@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.9.5 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.10.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -15,7 +15,8 @@
       customClass: 'arrow',
       height: 50,
       hoverIntent: 200,
-      selectedDelimiter: '; ',
+      multiDelimiter: '; ',
+      multiVerbosity: 99,
       selectedMarker: '&#10003;',
       afterLoad: function(){}
     }, oOptions);
@@ -24,6 +25,12 @@
     // Validate options
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
+    if (isNaN(oOptions.multiVerbosity)) oOptions.multiVerbosity = 99;
+
+    // Translatable strings
+    var MULTI_NONE = 'None selected',
+      MULTI_PREFIX = 'Selected: ',
+      MULTI_POSTFIX = ' selected';
 
     // Globals
     var $current,
@@ -140,10 +147,10 @@
         $items.width(nWidth).css('width', $items.css('width')).click(function() {
           var $li = $(this),
             $selected = $dropdown.children('.selected');
-          // Ignore disabled menu or menu item
-          if ($dropdown.parent().hasClass('disabled') || $li.hasClass('disabled') || $li.hasClass('label')) return;
-          // Only update if different value selected
-          if ($dropdown.hasClass('active') && $li.data('value')!==$selected.data('value')) {
+          // Ignore disabled menu
+          if ($dropdown.parent().hasClass('disabled')) return;
+          // Only update if not disabled, not a label, and a different value selected
+          if ($dropdown.hasClass('active') && !$li.hasClass('disabled') && !$li.hasClass('label') && $li.data('value')!==$selected.data('value')) {
             // Select highlighted item
             if (bMultiple) {
               if ($li.children('span.checked').length) $li.children('span.checked').remove();
@@ -173,7 +180,7 @@
             }
             $select.trigger('change');
           }
-          if ($li.hasClass('selected') || !bMultiple || !$dropdown.hasClass('active')) {
+          if ($li.hasClass('selected') || !bMultiple) {
             $dropdown.toggleClass('active');
             $dropdown.attr('aria-expanded', $dropdown.hasClass('active'));
           }
@@ -441,11 +448,14 @@
       // Update selected values for multi-select menu
       updateSelected = function($dropdown) {
         var $select = $dropdown.parent().children('select'),
-          sSelected = $('option', $select).map(function() {
+          aSelected = $('option', $select).map(function() {
             if (this.selected) return this.text;
-          }).get().join(oOptions.selectedDelimiter);
+          }).get(),
+          sSelected;
+        if (oOptions.multiVerbosity>=aSelected.length) sSelected = aSelected.join(oOptions.multiDelimiter) || MULTI_NONE;
+        else sSelected = aSelected.length + '/' + $('option', $select).length + MULTI_POSTFIX;
         if (sSelected) {
-          var sTitle = ($select.attr('title') ? $select.attr('title') + '\n' : '') + 'Selected: ' + sSelected;
+          var sTitle = ($select.attr('title') ? $select.attr('title') : '') + (aSelected.length ? '\n' + MULTI_PREFIX + aSelected.join(oOptions.multiDelimiter) : '');
           $dropdown.children('.selected').text(sSelected);
           $dropdown.attr({
             'title': sTitle,
