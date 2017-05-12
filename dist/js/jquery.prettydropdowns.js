@@ -15,7 +15,7 @@
       customClass: 'arrow',
       height: 50,
       hoverIntent: 200,
-      selectedDelimiter: '; ',
+      multiDelimiter: '; ',
       selectedMarker: '&#10003;',
       afterLoad: function(){}
     }, oOptions);
@@ -443,7 +443,7 @@
         var $select = $dropdown.parent().children('select'),
           sSelected = $('option', $select).map(function() {
             if (this.selected) return this.text;
-          }).get().join(oOptions.selectedDelimiter);
+          }).get().join(oOptions.multiDelimiter);
         if (sSelected) {
           var sTitle = ($select.attr('title') ? $select.attr('title') + '\n' : '') + 'Selected: ' + sSelected;
           $dropdown.children('.selected').text(sSelected);
