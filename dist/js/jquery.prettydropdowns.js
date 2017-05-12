@@ -16,6 +16,7 @@
       height: 50,
       hoverIntent: 200,
       multiDelimiter: '; ',
+      multiVerbosity: 99,
       selectedMarker: '&#10003;',
       afterLoad: function(){}
     }, oOptions);
@@ -24,6 +25,12 @@
     // Validate options
     if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
+    if (isNaN(oOptions.multiVerbosity)) oOptions.multiVerbosity = 99;
+
+    // Translable strings
+    var MULTI_NONE = 'None selected',
+      MULTI_PREFIX = 'Selected: ',
+      MULTI_POSTFIX = ' selected';
 
     // Globals
     var $current,
@@ -441,11 +448,14 @@
       // Update selected values for multi-select menu
       updateSelected = function($dropdown) {
         var $select = $dropdown.parent().children('select'),
-          sSelected = $('option', $select).map(function() {
+          aSelected = $('option', $select).map(function() {
             if (this.selected) return this.text;
-          }).get().join(oOptions.multiDelimiter);
+          }).get(),
+          sSelected;
+        if (oOptions.multiVerbosity>=aSelected.length) sSelected = aSelected.join(oOptions.multiDelimiter) || MULTI_NONE;
+        else sSelected = aSelected.length + '/' + $('option', $select).length + MULTI_POSTFIX;
         if (sSelected) {
-          var sTitle = ($select.attr('title') ? $select.attr('title') + '\n' : '') + 'Selected: ' + sSelected;
+          var sTitle = ($select.attr('title') ? $select.attr('title') : '') + (aSelected.length ? '\n' + MULTI_PREFIX + aSelected.join(oOptions.multiDelimiter) : '');
           $dropdown.children('.selected').text(sSelected);
           $dropdown.attr({
             'title': sTitle,
