@@ -27,7 +27,7 @@
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
     if (isNaN(oOptions.multiVerbosity)) oOptions.multiVerbosity = 99;
 
-    // Translable strings
+    // Translatable strings
     var MULTI_NONE = 'None selected',
       MULTI_PREFIX = 'Selected: ',
       MULTI_POSTFIX = ' selected';
