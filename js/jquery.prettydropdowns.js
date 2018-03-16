@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.10.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.11.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at
@@ -83,12 +83,6 @@
             + $select.css('margin-right') + ' '
             + $select.css('margin-bottom') + ' '
             + $select.css('margin-left') + ';">';
-        // NOTE: If 'size' attribute is larger than 1, then the first item won't be selected by
-        // default, so we have to do it manually.
-        if (!$selected[0]) {
-          $items[0].selected = true;
-          $selected = $items.filter(':selected');
-        }
         if (bMultiple) {
           sHtml += renderItem(null, 'selected');
           $items.each(function() {
