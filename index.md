@@ -85,7 +85,7 @@ $dropdown.refresh();
 
 ## Data Attributes
 
-The `data-prefix` and `data-suffix` attributes can be added to the `<option>` elements to insert custom HTML before and after each menu item, respectively. You can make use of these attributes to add icons, thumbnails, badges, etc. to the menu items. A good example can be seen [in the demo](https://thdoan.github.io/pretty-dropdowns/demo.html#example3).
+The `data-prefix` and `data-suffix` attributes can be added to the `<option>` and `<optgroup>` elements to insert custom HTML before and after each menu item or menu group label, respectively. You can make use of these attributes to add icons, thumbnails, badges, etc. to the menu items. A good example can be seen [in the demo](https://thdoan.github.io/pretty-dropdowns/demo.html#example3).
 
 ## Keyboard Navigation
 

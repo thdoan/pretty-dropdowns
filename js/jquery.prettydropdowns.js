@@ -1,9 +1,8 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.11.0 by T. H. Doan (http://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.12.0 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
- * Read a copy of the license in the LICENSE file or at
- * http://choosealicense.com/licenses/mit
+ * Read a copy of the license in the LICENSE file or at https://choosealicense.com/licenses/mit/
  */
 
 (function($) {
@@ -377,7 +376,7 @@
               break;
             case 'OPTGROUP':
               sClass += ' label';
-              sText = elOpt.getAttribute('label');
+              sText = (elOpt.getAttribute('data-prefix') || '') + elOpt.getAttribute('label') + (elOpt.getAttribute('data-suffix') || '');
               break;
           }
           if (elOpt.disabled || (sGroup && elOpt.parentNode.disabled)) sClass += ' disabled';
