@@ -1,6 +1,6 @@
 {
   "name": "pretty-dropdowns",
-  "version": "4.11.0",
+  "version": "4.12.0",
   "description": "A simple, lightweight jQuery plugin to create stylized drop-down menus.",
   "keywords": [
     "jquery-plugin",
@@ -10,12 +10,12 @@
     "drop-down menu",
     "select"
   ],
-  "homepage": "http://thdoan.github.io/pretty-dropdowns/",
+  "homepage": "https://thdoan.github.io/pretty-dropdowns/",
   "bugs": {
     "url": "https://github.com/thdoan/pretty-dropdowns/issues"
   },
   "license": "MIT",
-  "author": "T. H. Doan <thdoan@gmail.com> (http://www.tohodo.com/)",
+  "author": "T. H. Doan <thdoan@gmail.com> (http://www.tohodo.com)",
   "main": "dist/js/jquery.prettydropdowns.js",
   "dependencies": {
     "jquery": ">=1.7.0"
