@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.12.0 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.12.2 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at https://choosealicense.com/licenses/mit/
@@ -184,7 +184,7 @@
             var nWinHeight = window.innerHeight,
               nMaxHeight,
               nOffsetTop = $dropdown.offset().top,
-              nScrollTop = document.body.scrollTop,
+              nScrollTop = $(document).scrollTop(),
               nDropdownHeight = $dropdown.outerHeight();
             if (nSize) {
               nMaxHeight = nSize*(oOptions.height-2);
