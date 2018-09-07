@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.12.2 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.13.0 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at https://choosealicense.com/licenses/mit/
@@ -12,6 +12,7 @@
     oOptions = $.extend({
       classic: false,
       customClass: 'arrow',
+      width: null,
       height: 50,
       hoverIntent: 200,
       multiDelimiter: '; ',
@@ -22,7 +23,9 @@
 
     oOptions.selectedMarker = '<span aria-hidden="true" class="checked"> ' + oOptions.selectedMarker + '</span>';
     // Validate options
-    if (isNaN(oOptions.height) || oOptions.height<8) oOptions.height = 8;
+    if (isNaN(oOptions.width) && !/^\d+%$/.test(oOptions.width)) oOptions.width = null;
+    if (isNaN(oOptions.height)) oOptions.height = 50;
+    else if (oOptions.height<8) oOptions.height = 8;
     if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
     if (isNaN(oOptions.multiVerbosity)) oOptions.multiVerbosity = 99;
 
@@ -137,7 +140,13 @@
         // Set dropdown width and event handler
         // NOTE: Setting width using width(), then css() because width() only can return a float,
         // which can result in a missing right border when there is a scrollbar.
-        $items.width(nWidth).css('width', $items.css('width')).click(function() {
+        $items.width(nWidth).css('width', $items.css('width'));
+        if (oOptions.width) {
+          $dropdown.parent().css('min-width', $items.css('width'));
+          $dropdown.css('width', '100%');
+          $items.css('width', '100%');
+        }
+        $items.click(function() {
           var $li = $(this),
             $selected = $dropdown.children('.selected');
           // Ignore disabled menu
@@ -230,7 +239,7 @@
         // Put focus on menu when user clicks on label
         if (sLabelId) $('#' + sLabelId).off('click', handleFocus).click(handleFocus);
         // Done with everything!
-        $dropdown.parent().width(nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
+        $dropdown.parent().width(oOptions.width||nOuterWidth||$dropdown.outerWidth(true)).removeClass('loading');
         oOptions.afterLoad();
       },
 
@@ -386,7 +395,7 @@
         ++nCount;
         return '<li id="item' + nTimestamp + '-' + nCount + '"'
           + (sGroup ? ' data-group="' + sGroup + '"' : '')
-          + (elOpt && elOpt.value ? ' data-value="' + elOpt.value + '"' : '')
+          + (elOpt && (elOpt.value||oOptions.classic) ? ' data-value="' + elOpt.value + '"' : '')
           + (elOpt && elOpt.nodeName==='OPTION' ? ' role="option"' : '')
           + (sTitle ? ' title="' + sTitle + '" aria-label="' + sTitle + '"' : '')
           + (sClass ? ' class="' + $.trim(sClass) + '"' : '')

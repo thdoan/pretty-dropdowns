@@ -54,16 +54,17 @@ $(document).ready(function() {
 
 ## Options
 
-Name                | Type     | Default      | Description
-------------------- | -------- | ------------ | -----------
-`classic`           | boolean  | false        | The default behavior is to move the selected item to the top. If you want the order of items to remain static, then set this to `true`.
-`customClass`       | string   | arrow        | The class name to customize the drop-down menu style. The default `arrow` class displays a chevron-type arrow icon. Two additional helper classes are built in (add either or both to `arrow`): `triangle` converts the chevron into a solid triangle; `small` renders the arrow icon at half size.
-`height`            | number   | 50           | The drop-down menu item height. The minimum value is 8. Note that the maximum number of items displayed when the menu is opened is determined by the `size` attribute of the `<select>` element.
-`hoverIntent`       | number   | 200          | The wait period (in milliseconds) before collapsing the drop-down menu after you hover off of it. If you hover back onto the menu within the wait period, it will remain open. The minimum value is 0.
-`multiDelimiter`    | string   | ;            | The separator character to use for the list of selected items in a multi-select menu.
-`multiVerbosity`    | number   | 99           | The maximum number of selected items to display in a multi-select menu before replacing it with a summary (e.g., "2/3 selected"). To display "0/3 selected" instead of "None selected", set this option to -1.
-`selectedMarker`    | string   | **&#10003;** | The icon or symbol to mark that an item is selected. HTML is accepted (e.g., `<i class="fa fa-check"></i>`).
-`afterLoad`         | function |              | Callback function to execute after the drop-down menu widget is loaded.
+Name                | Type             | Default      | Description
+------------------- | ---------------- | ------------ | -----------
+`classic`           | boolean          | false        | The default behavior is to move the selected item to the top. If you want the order of items to remain static, then set this to `true`.
+`customClass`       | string           | arrow        | Class name to customize the drop-down menu style. The default `arrow` class displays a chevron-type arrow icon. Two additional helper classes are built in (add either or both to `arrow`): `triangle` converts the chevron into a solid triangle; `small` renders the arrow icon at half size.
+`width`             | number or string | null         | Drop-down menu width in pixels or percentage. Use a number for pixels or a string for percentage. By default, the width scales to fit the longest item in the drop-down menu.
+`height`            | number           | 50           | Drop-down menu height in pixels. The minimum value is 8. Note that the maximum number of items displayed when the menu is opened is determined by the `size` attribute of the `<select>` element.
+`hoverIntent`       | number           | 200          | Wait period (in milliseconds) before collapsing the drop-down menu after you hover off of it. If you hover back onto the menu within the wait period, it will remain open. The minimum value is 0.
+`multiDelimiter`    | string           | ;            | Separator character to use for the list of selected items in a multi-select menu.
+`multiVerbosity`    | number           | 99           | Maximum number of selected items to display in a multi-select menu before replacing it with a summary (e.g., "2/3 selected"). To display "0/3 selected" instead of "None selected", set this option to -1.
+`selectedMarker`    | string           | **&#10003;** | Icon or symbol to mark that an item is selected. HTML is accepted (e.g., `<i class="fa fa-check"></i>`).
+`afterLoad`         | function         |              | Callback function to execute after the drop-down menu widget is loaded.
 
 ## Methods
 
