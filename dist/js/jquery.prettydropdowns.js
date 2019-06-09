@@ -26,7 +26,7 @@
     if (isNaN(oOptions.width) && !/^\d+%$/.test(oOptions.width)) oOptions.width = null;
     if (isNaN(oOptions.height)) oOptions.height = 50;
     else if (oOptions.height<8) oOptions.height = 8;
-    if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
+    if (isNaN(oOptions.hoverIntent)) oOptions.hoverIntent = 200;
     if (isNaN(oOptions.multiVerbosity)) oOptions.multiVerbosity = 99;
 
     // Translatable strings
@@ -236,6 +236,11 @@
           mouseleave: resetDropdown,
           mousemove:  hoverDropdownItem
         });
+        if (oOptions.hoverIntent<0) {
+          $(document).click(function(e) {
+            if ($dropdown.data('hover') && !$dropdown[0].contains(e.target)) resetDropdown($dropdown[0]);
+          });
+        }
         // Put focus on menu when user clicks on label
         if (sLabelId) $('#' + sLabelId).off('click', handleFocus).click(handleFocus);
         // Done with everything!
@@ -407,12 +412,8 @@
       // Reset menu state
       // @param o Event or Element object
       resetDropdown = function(o) {
+        if (oOptions.hoverIntent<0 && o.type==='mouseleave') return;
         var $dropdown = $(o.currentTarget||o);
-        // NOTE: Sometimes it's possible for $dropdown to point to the wrong element when you
-        // quickly hover over another menu. To prevent this, we need to check for .active as a
-        // backup and manually reassign $dropdown. This also requires that it's not clicked on
-        // because in rare cases the reassignment fails and the reverse menu will not get reset.
-        if (o.type==='mouseleave' && !$dropdown.hasClass('active') && !$dropdown.data('clicked')) $dropdown = $('.prettydropdown > ul.active');
         $dropdown.data('hover', false);
         clearTimeout(nTimer);
         nTimer = setTimeout(function() {
