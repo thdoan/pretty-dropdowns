@@ -173,8 +173,9 @@
               }).after($selected);
               // Sync <select> element
               $('optgroup, option', $select).filter(function() {
-                // NOTE: .data('value') can return numeric, so using == comparison instead.
-                return this.value==$li.data('value') || this.text===$li.contents().filter(function() {
+                // <option>: this.value = this.text, $li.data('value') = $li.contents()
+                // <option value="">: this.value = "", $li.data('value') = undefined
+                return (this.value+'|'+this.text)===($li.data('value')||'')+'|'+$li.contents().filter(function() {
                     // Filter out selected marker
                     return this.nodeType===3;
                   }).text();
