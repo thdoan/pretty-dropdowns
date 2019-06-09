@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.15.0 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.17.0 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at https://choosealicense.com/licenses/mit/
@@ -26,7 +26,7 @@
     if (isNaN(oOptions.width) && !/^\d+%$/.test(oOptions.width)) oOptions.width = null;
     if (isNaN(oOptions.height)) oOptions.height = 50;
     else if (oOptions.height<8) oOptions.height = 8;
-    if (isNaN(oOptions.hoverIntent) || oOptions.hoverIntent<0) oOptions.hoverIntent = 200;
+    if (isNaN(oOptions.hoverIntent)) oOptions.hoverIntent = 200;
     if (isNaN(oOptions.multiVerbosity)) oOptions.multiVerbosity = 99;
 
     // Translatable strings
@@ -173,8 +173,9 @@
               }).after($selected);
               // Sync <select> element
               $('optgroup, option', $select).filter(function() {
-                // NOTE: .data('value') can return numeric, so using == comparison instead.
-                return this.value==$li.data('value') || this.text===$li.contents().filter(function() {
+                // <option>: this.value = this.text, $li.data('value') = $li.contents()
+                // <option value="">: this.value = "", $li.data('value') = undefined
+                return (this.value+'|'+this.text)===($li.data('value')||'')+'|'+$li.contents().filter(function() {
                     // Filter out selected marker
                     return this.nodeType===3;
                   }).text();
@@ -236,6 +237,11 @@
           mouseleave: resetDropdown,
           mousemove:  hoverDropdownItem
         });
+        if (oOptions.hoverIntent<0) {
+          $(document).click(function(e) {
+            if ($dropdown.data('hover') && !$dropdown[0].contains(e.target)) resetDropdown($dropdown[0]);
+          });
+        }
         // Put focus on menu when user clicks on label
         if (sLabelId) $('#' + sLabelId).off('click', handleFocus).click(handleFocus);
         // Done with everything!
@@ -407,12 +413,8 @@
       // Reset menu state
       // @param o Event or Element object
       resetDropdown = function(o) {
+        if (oOptions.hoverIntent<0 && o.type==='mouseleave') return;
         var $dropdown = $(o.currentTarget||o);
-        // NOTE: Sometimes it's possible for $dropdown to point to the wrong element when you
-        // quickly hover over another menu. To prevent this, we need to check for .active as a
-        // backup and manually reassign $dropdown. This also requires that it's not clicked on
-        // because in rare cases the reassignment fails and the reverse menu will not get reset.
-        if (o.type==='mouseleave' && !$dropdown.hasClass('active') && !$dropdown.data('clicked')) $dropdown = $('.prettydropdown > ul.active');
         $dropdown.data('hover', false);
         clearTimeout(nTimer);
         nTimer = setTimeout(function() {
