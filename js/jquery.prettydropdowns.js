@@ -1,5 +1,5 @@
 /*!
- * jQuery Pretty Dropdowns Plugin v4.13.0 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
+ * jQuery Pretty Dropdowns Plugin v4.15.0 by T. H. Doan (https://thdoan.github.io/pretty-dropdowns/)
  *
  * jQuery Pretty Dropdowns by T. H. Doan is licensed under the MIT License.
  * Read a copy of the license in the LICENSE file or at https://choosealicense.com/licenses/mit/
@@ -58,7 +58,7 @@
         $select.data('size', nSize).removeAttr('size');
         // Set <select> height to reserve space for <div> container
         $select.css('visibility', 'hidden').outerHeight(oOptions.height);
-        nTimestamp = +new Date();
+        nTimestamp = performance.now()*100000000000000;
         // Test whether to add 'aria-labelledby'
         if (elSel.id) {
           // Look for <label>
@@ -420,6 +420,8 @@
           if ($dropdown.hasClass('reverse') && !oOptions.classic) $dropdown.prepend($dropdown.children(':last-child'));
           $dropdown.removeClass('active reverse').removeData('clicked').attr('aria-expanded', 'false').css('height', '');
           $dropdown.children().removeClass('hover nohover');
+          // Update focus for NVDA screen readers
+          $dropdown.attr('aria-activedescendant', $dropdown.children('.selected').attr('id'));
         }, (o.type==='mouseleave' && !$dropdown.data('clicked')) ? oOptions.hoverIntent : 0);
       },
 
@@ -427,11 +429,13 @@
       // bNoScroll set on hoverDropdownItem()
       toggleHover = function($li, bOn, bNoScroll) {
         if (bOn) {
+          var $dropdown = $li.parent();
           $li.removeClass('nohover').addClass('hover');
+          // Update focus for NVDA screen readers
+          $dropdown.attr('aria-activedescendant', $li.attr('id'));
           if ($li.length===1 && $current && !bNoScroll) {
             // Ensure items are always in view
-            var $dropdown = $li.parent(),
-              nDropdownHeight = $dropdown.outerHeight(),
+            var nDropdownHeight = $dropdown.outerHeight(),
               nItemOffset = $li.offset().top-$dropdown.offset().top-1; // -1px for top border
             if ($li.index()===0) {
               $dropdown.scrollTop(0);
