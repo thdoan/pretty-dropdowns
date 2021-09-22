@@ -371,7 +371,8 @@
       // Highlight menu item
       hoverDropdownItem = function(e) {
         var $dropdown = $(e.currentTarget);
-        if (e.target.nodeName!=='LI' || !$dropdown.hasClass('active') || new Date()-$dropdown.data('lastKeypress')<200) return;
+        let target = (e.target.nodeName !== 'LI') ? $(e.target).parent('li') : e.target
+        if (target !== 'LI' || !$dropdown.hasClass('active') || new Date() - $dropdown.data('lastKeypress') < 200) return;
         toggleHover($dropdown.children(), 0, 1);
         toggleHover($(e.target), 1, 1);
       },
