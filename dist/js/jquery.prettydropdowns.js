@@ -58,6 +58,13 @@
         $select.data('size', nSize).removeAttr('size');
         // Set <select> height to reserve space for <div> container
         $select.css('visibility', 'hidden').outerHeight(oOptions.height);
+        // Let original select visible for a while to show any validation message from the browser
+        $select.on('invalid', function() {
+          $select.css('visibility', 'visible');
+          setTimeout(function() {
+            $select.css('visibility', 'hidden');
+          }, 5000);
+        });
         nTimestamp = performance.now()*100000000000000;
         // Test whether to add 'aria-labelledby'
         if (elSel.id) {
